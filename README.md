@@ -3,6 +3,12 @@
 FaceLock is a program to protect your PC using facial recognition and data encryption.
 
 Technical stack:
-- PyQT6 - Application design
-- SqlAlchemy - ORM for working with PostgreSQL
+TCP server:
+  - SqlAlchemy - ORM for working with PostgreSQL
+  - Python sockets - TCP connection
+  - docker-compose - Setup
+
+Application:
+  - PyQT6 - Application design
+  - OpenCV - FaceRecognition
 ...
