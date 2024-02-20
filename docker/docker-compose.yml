@@ -1,0 +1,15 @@
+version: "3.9"
+services:
+  tcplistener:
+    build:
+      context: ../
+      dockerfile: docker/Dockerfile
+    image: tcpserver
+    container_name: "tcp_server"
+    expose:
+      - "9000"
+    #volumes:
+      #- "/data/FaceLock/server:/server"
+    ports:
+      - "9000:9000"
+    restart: "always"
