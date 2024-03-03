@@ -1,17 +1,18 @@
 import queue
 import sys
 import cv2
-
+import time
 from PySide6 import QtCore
-from PySide6.QtCore import Slot
-from PySide6.QtGui import QImage, QPixmap
+from PySide6.QtCore import Slot, QPointF, Qt, QRectF
+from PySide6.QtGui import QImage, QPixmap, QPolygonF, QPainter, QPen, QColor, QBrush
 from PySide6.QtWidgets import QApplication, QMainWindow
 from MainWindow.MainWindow import Ui_MainWindow
 from fl_utils.base_logging import setup_logging
 from logging import getLogger
 from app.stream.video_stream import VideoStream
-setup_logging(file_name="server.log")
+setup_logging(file_name="app.log")
 logger = getLogger(__name__)
+
 
 class FaceLockApp(QMainWindow):
     def __init__(self):
@@ -35,9 +36,8 @@ class FaceLockApp(QMainWindow):
         while True:
             if not self.video_queue.empty():
                 frame = self.video_queue.get()["frame"]
+
                 self.displayImage(frame)
-                cv2.imshow("frame", frame)
-                cv2.destroyAllWindows()
                 if cv2.waitKey(1) & 0xFF == ord('q'):
                     break
         self.video_stream.stop()
@@ -57,7 +57,8 @@ class FaceLockApp(QMainWindow):
         self.ui.videoLabel.setMinimumWidth(frame.shape[1])
         self.ui.videoLabel.setMinimumHeight(frame.shape[0])
         self.ui.videoLabel.setAlignment(QtCore.Qt.AlignmentFlag.AlignHCenter | QtCore.Qt.AlignmentFlag.AlignVCenter)
-
+        cv2.imshow("", frame)
+        cv2.destroyAllWindows()
 
 def main():
     argv = sys.argv[1:]

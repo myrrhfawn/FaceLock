@@ -15,3 +15,4 @@ config_parser.read(FACELOCK_CONFIG_PATH)
 
 DEBUG = config_parser.getboolean("general", "debug")
 
+MIN_DETECTION_FPS = 5
