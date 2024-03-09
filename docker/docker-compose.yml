@@ -8,8 +8,24 @@ services:
     container_name: "tcp_server"
     expose:
       - "9000"
-    #volumes:
-      #- "/data/FaceLock/server:/server"
+    volumes:
+      - "/data/FaceLock/server:/server"
     ports:
       - "9000:9000"
+    environment:
+      PYTHONPATH: /
     restart: "always"
+    depends_on:
+      - db
+  db:
+    image: postgres:16.1
+    container_name: "fl_postgres"
+    hostname: database
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_PASSWORD=12345
+      - POSTGRES_USER=admin
+    restart: unless-stopped
+    volumes:
+      - ${POSTGRES_DATA_DIR:-./postgres-data}:/var/lib/postgresql/data

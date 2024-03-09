@@ -6,7 +6,9 @@ FROM python:3.10
 WORKDIR /
 
 COPY server /server
-COPY fl_utils /server/fl_utils
+COPY fl_utils /fl_utils
+COPY /docker/requirements.txt requirements.txt
+RUN pip install -r requirements.txt
 
 # copy the entire FaceLock directory into the container
 
@@ -16,4 +18,4 @@ EXPOSE 9000
 # command to run on container start
 WORKDIR /server
 
-CMD ["python", "server.py"]
+CMD ["python", "run.py"]

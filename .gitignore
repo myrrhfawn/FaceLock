@@ -1,0 +1,4 @@
+docker/postgres-data
+venv/*
+logs/*
+*.db
