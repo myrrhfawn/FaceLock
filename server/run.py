@@ -1,6 +1,6 @@
 from threading import Thread
 from socketserver import ThreadingTCPServer
-from listener import TCPHandler
+from server.listener import TCPHandler
 from logging import getLogger
 from fl_utils.base_logging import setup_logging
 ThreadingTCPServer.allow_reuse_address = True
