@@ -2,3 +2,5 @@ docker/postgres-data
 venv/*
 logs/*
 *.db
+/app/dist/
+/app/build/

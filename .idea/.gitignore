@@ -1,3 +1,8 @@
 # Default ignored files
 /shelf/
 /workspace.xml
+/logs
+/app/dist/
+/app/build/
+/venv/
+
