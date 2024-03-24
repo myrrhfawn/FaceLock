@@ -6,10 +6,14 @@ from fl_utils.base_logging import setup_logging
 from logging import getLogger
 from app.detector.simple_facerec import SimpleFaceRec
 from app.constants import MIN_DETECTION_FPS
+from threading import Event, Thread
+
 setup_logging(file_name="video_stream.log")
 logger = getLogger(__name__)
-class VideoStream():
+
+class VideoStream(Thread):
     def __init__(self, cam_id, frame_queue):
+        Thread.__init__(self, daemon=True)
         self.frame_queue = frame_queue
         self.detection_queue = queue.Queue()
         self.cam_id = cam_id
@@ -17,21 +21,20 @@ class VideoStream():
         self.default_image = "/data/FaceLock/app/detector/me.jpeg"
         self.interval = 1
         self.last_detection = time.time()
-        self.video_thread = threading.Thread(target=self.run_video_stream)
-        self.stop_stream = threading.Event()
+        self._stop_event = Event()
+        #self.start()
 
-    def start(self):
-        logger.info('Videos stream thread started.')
-        self.video_thread.start()
+    def stopped(self):
+        """TODO: Add docstring."""
+        return self._stop_event.is_set()
 
     def stop(self):
-        self.stop_stream.set()
-        self.video_thread.join()
+        self._stop_event.set()
 
-    def run_video_stream(self):
+    def run(self):
         cap = cv2.VideoCapture(self.cam_id)
         self.detector.start()
-        while not self.stop_stream.is_set():
+        while not self.stopped():
             ret, frame = cap.read()
             if ret:
                 logger.info("Image from source")

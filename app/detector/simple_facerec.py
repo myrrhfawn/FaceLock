@@ -43,12 +43,10 @@ class SimpleFaceRec():
 
     def get_detections(self, image, locations):
         encodings = face_recognition.face_encodings(image, locations)
-        face_names = []
+        face_names = ["unknown"]
         logger.info(encodings)
         try:
             for encode in encodings:
-                logger.info(f"encoded: {self.encoded_faces}")
-                logger.info(list(self.encoded_faces.values()))
                 matches = face_recognition.compare_faces(list(list(self.encoded_faces.values())), encode)
                 logger.info(f"mathes: {matches}")
                 name = "unknown"
@@ -71,11 +69,18 @@ class SimpleFaceRec():
 
     def get_image_with_detection(self, image: np.array, draw: bool = False):
         if draw and len(self.last_location) > 0:
+            logger.info(f"last loc: {self.last_location}")
+            logger.info(f"last det: {self.last_detection}")
             for bbox, name in zip(self.last_location, self.last_detection):
                 y1, x1, y2, x2 = bbox[0], bbox[1], bbox[2], bbox[3]
+                image = cv2.UMat(image)
+
                 cv2.rectangle(image, (x1, y1), (x2, y2), (0, 0, 200), 4)
                 font = cv2.FONT_HERSHEY_DUPLEX
+
                 cv2.putText(image, name, (x2 + 6, y2 - 6), font, 1.0, (255, 255, 255), 1)
+                image = image.get()
+
             #landmark = self.get_face_landmark(image)
         return image
 
