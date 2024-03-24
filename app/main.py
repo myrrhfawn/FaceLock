@@ -40,7 +40,7 @@ class FaceLockApp(QtWidgets.QMainWindow):
         self.video_stream.start()
         while True:
             if self.video_stream.isFrameReady():
-                np_img = self.video_stream.get_frame(detection=False)
+                np_img = self.video_stream.get_frame(detection=True)
                 self.update_image(np_img)
             if cv2.waitKey(1) & 0xFF == ord('q'):
                 break

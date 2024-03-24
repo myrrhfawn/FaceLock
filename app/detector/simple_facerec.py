@@ -106,3 +106,8 @@ class SimpleFaceRec():
             encoding = face_recognition.face_encodings(img)
             if len(encoding) > 0:
                 self.encoded_faces[image_name.split(".")[0]] = encoding[0]
+
+if __name__ == "__main__":
+    img = cv2.imread("me.jpeg")
+    img = cv2.rotate(img, cv2.ROTATE_90_CLOCKWISE)
+    img = cv2.imwrite("me.jpeg", img)
