@@ -5,11 +5,12 @@ import face_recognition
 import numpy as np
 import threading
 from logging import getLogger
+from app.common.frame import Frame
 from fl_utils.base_logging import setup_logging
+from app.constants import  UNKNOWN_TITLE, IMAGE_FOLDER_PATH
 setup_logging(file_name="face_detector.log")
 logger = getLogger(__name__)
 
-IMAGE_FOLDER_PATH = "/data/FaceLock/app/detector/faces"
 class SimpleFaceRec():
     def __init__(self, input_queue, output_queue=None):
         self.last_location: list = []
@@ -22,15 +23,14 @@ class SimpleFaceRec():
         self.stop_detector = threading.Event()
         self.load_faces_from_folder()
 
-
-    def prepare_image(self, image, encoding=False):
-        image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+    @staticmethod
+    def prepare_image(image, encoding=False):
         if encoding:
             image = face_recognition.face_encodings(image)
         return image
 
-    def update_detection(self, image):
-        image = self.prepare_image(image)
+    def update_detection(self, frame):
+        image = self.prepare_image(frame.img)
         self.last_location = self.get_face_location(image)
         self.last_detection = self.get_detections(image, self.last_location)
         #self.last_landmark = self.get_face_landmark(image)
@@ -41,15 +41,15 @@ class SimpleFaceRec():
     def get_face_landmark(self, image):
         return face_recognition.face_landmarks(image)
 
-    def get_detections(self, image, locations):
+    def get_detections(self, image: np.array, locations):
         encodings = face_recognition.face_encodings(image, locations)
-        face_names = ["unknown"]
+        face_names = [UNKNOWN_TITLE]
         logger.info(encodings)
         try:
             for encode in encodings:
                 matches = face_recognition.compare_faces(list(list(self.encoded_faces.values())), encode)
                 logger.info(f"mathes: {matches}")
-                name = "unknown"
+                name = UNKNOWN_TITLE
 
                 # # If a match was found in known_face_encodings, just use the first one.
                 # if True in matches:
@@ -67,22 +67,22 @@ class SimpleFaceRec():
             logger.error(f"Error during detection: {e}")
         return face_names
 
-    def get_image_with_detection(self, image: np.array, draw: bool = False):
+    def get_image_with_detection(self, frame: Frame, draw: bool = False) -> Frame:
         if draw and len(self.last_location) > 0:
             logger.info(f"last loc: {self.last_location}")
             logger.info(f"last det: {self.last_detection}")
             for bbox, name in zip(self.last_location, self.last_detection):
                 y1, x1, y2, x2 = bbox[0], bbox[1], bbox[2], bbox[3]
-                image = cv2.UMat(image)
+                image = cv2.UMat(frame.img)
 
                 cv2.rectangle(image, (x1, y1), (x2, y2), (0, 0, 200), 4)
                 font = cv2.FONT_HERSHEY_DUPLEX
 
                 cv2.putText(image, name, (x2 + 6, y2 - 6), font, 1.0, (255, 255, 255), 1)
-                image = image.get()
+                frame.img = image.get()
+        frame.detection = SimpleFaceRec.get_user_from_detection(self.last_detection)
 
-            #landmark = self.get_face_landmark(image)
-        return image
+        return frame
 
     def start(self):
         logger.info('Detection thread started.')
@@ -106,6 +106,16 @@ class SimpleFaceRec():
             encoding = face_recognition.face_encodings(img)
             if len(encoding) > 0:
                 self.encoded_faces[image_name.split(".")[0]] = encoding[0]
+
+    @staticmethod
+    def get_user_from_detection(detections):
+        user = UNKNOWN_TITLE
+        for det in detections:
+            if detections == user:
+                continue
+            return det
+        return user
+
 
 if __name__ == "__main__":
     img = cv2.imread("me.jpeg")

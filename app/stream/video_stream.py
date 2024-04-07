@@ -5,7 +5,7 @@ import queue
 from fl_utils.base_logging import setup_logging
 from logging import getLogger
 from app.detector.simple_facerec import SimpleFaceRec
-from app.constants import MIN_DETECTION_FPS
+from app.constants import MIN_DETECTION_FPS, SHOW_DETECTION
 from threading import Event, Thread
 
 setup_logging(file_name="video_stream.log")
@@ -42,7 +42,7 @@ class VideoStream(Thread):
                     with self.detection_queue.mutex:
                         self.detection_queue.queue.clear()
                 self.detection_queue.put(frame)
-                frame = self.detector.get_image_with_detection(frame, True)
+                frame = self.detector.get_image_with_detection(frame, SHOW_DETECTION)
                 self.frame_queue.put({"frame": frame})
             else:
                 logger.info("default image")

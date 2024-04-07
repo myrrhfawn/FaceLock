@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+import cv2
 import numpy as np
 import yaml
 
@@ -6,13 +7,13 @@ import gi
 gi.require_version('Gst', '1.0')
 gi.require_version('GstVideo', '1.0')
 from gi.repository import Gst, GObject
-from gi.repository import GdkX11, GstVideo
+#from gi.repository import GdkX11, GstVideo
 from threading import Event, Thread
 from fl_utils.base_logging import setup_logging
 from logging import getLogger
 import queue
-from app.constants import MIN_DETECTION_FPS
-
+from app.constants import MIN_DETECTION_FPS, SHOW_DETECTION
+from app.common.frame import Frame
 from app.detector.simple_facerec import SimpleFaceRec
 
 # Needed for window.get_xid(), xvimagesink.set_window_handle(), respectively:
@@ -97,12 +98,12 @@ class GStreamerPipeline(Thread):
              3),
             buffer=buf.extract_dup(0, buf.get_size()),
             dtype=np.uint8)
+        arr = cv2.cvtColor(arr, cv2.COLOR_BGR2RGB)
         return arr
 
     def __add_many(self, pipeline_list):
         '''
         Add list of Gst elements to pipeline
-
         '''
 
         for node in pipeline_list:
@@ -111,7 +112,6 @@ class GStreamerPipeline(Thread):
     def __link_many(self, pipeline_list):
         '''
         Links ordered (left to right) components in pipeline
-
         '''
 
         for n in range(len(pipeline_list) - 1):
@@ -124,7 +124,7 @@ class GStreamerPipeline(Thread):
         '''
 
         buff = sink.emit("pull-sample")
-        frame = self.__gst_to_np(buff)
+        frame = Frame(img=self.__gst_to_np(buff))
         if self.detection_queue.qsize() > MIN_DETECTION_FPS:
             with self.detection_queue.mutex:
                 self.detection_queue.queue.clear()
@@ -147,8 +147,6 @@ class GStreamerPipeline(Thread):
 
     def __on_sync_message(self, bus, message):
         '''
-
-
         '''
 
         if message.get_structure().get_name() == 'prepare-window-handle':
@@ -167,7 +165,7 @@ class GStreamerPipeline(Thread):
 
         return not (self.frame_buffor is None)
 
-    def get_frame(self, detection: bool = False):
+    def get_frame(self, detection: bool = False, show_det: bool = SHOW_DETECTION):
         '''
         Returns latest frame from frame buffor
         Frame is stored as numpy array.
@@ -176,17 +174,12 @@ class GStreamerPipeline(Thread):
         frame - numpy ndarray
         '''
         if detection:
-            ret_frame = self.detector.get_image_with_detection(self.frame_buffor, True)
+            ret_frame = self.detector.get_image_with_detection(self.frame_buffor, show_det)
         else:
             ret_frame = self.frame_buffor
         self.frame_buffor = None
         return ret_frame
 
-    def getFrame(self):
-        ret_frame = self.frame_buffor
-
-        self.frame_buffor = None
-        return ret_frame
 
     def startPrev(self):
         '''

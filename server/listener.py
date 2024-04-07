@@ -35,7 +35,6 @@ class TCPHandler(StreamRequestHandler):
                     logger.error(f"Unknown action: {action}")
                     self.send_error("UNKNOWN_ACTION_TYPE")
                 self.request.close()
-            logger.info("=======================END===========================")
         except ConnectionResetError:
             logger.warning("Connection Reset")
         except Exception:
@@ -44,10 +43,8 @@ class TCPHandler(StreamRequestHandler):
 
     def pre_process_action(self, action: dict):
         buffer_size = action['size'] if action.get('size') else 8192
-        logger.info(f"buffer size: {buffer_size}")
         data = self.request.recv(buffer_size)
         data = pickle.loads(data)
-        logger.info(f"data: {data}")
         self.action_processor.process(action, data)
 
     def send_success_message(self):
