@@ -1,4 +1,3 @@
-pyinstaller --onefile --windowed main.py
 #!/bin/bash
 
 # Перевіряємо, чи передано ім'я файлу main.py
