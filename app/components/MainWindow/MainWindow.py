@@ -25,8 +25,10 @@ class FaceLockApp(QtWidgets.QMainWindow):
         self.ui.signupButton.hide()
         self.ui.signupButton.clicked.connect(self.register_user)
 
+
     def change_label_text(self, text):
         pass
+
 
     @QtCore.pyqtSlot()
     def register_user(self):
@@ -35,7 +37,12 @@ class FaceLockApp(QtWidgets.QMainWindow):
         while frame.detection != UNKNOWN_TITLE:
             if self.video_stream.isFrameReady():
                 frame = self.video_stream.get_frame(detection=True, show_det=False)
-        encoding = SimpleFaceRec.prepare_image(frame.img, encoding=True)[0]
+        encoding = SimpleFaceRec.prepare_image(frame.img, encoding=True)
+        if len(encoding) > 0:
+            encoding = encoding[0]
+        else:
+            self.ui.debug_label.setText("No face detected. Try Again")
+            return
         registerDialog = RegisterDialog(mainWindow=self, encoding=encoding)
         self.hide()
         registerDialog.show()

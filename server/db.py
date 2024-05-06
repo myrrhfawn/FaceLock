@@ -85,6 +85,18 @@ class DataBase:
             logger.error(f"Error deleting User table {e}")
             return False
 
+    def get_all_encode_data(self):
+        session = self.Session()
+        try:
+            users = session.query(User.username, User.encode_data).all()
+            data_list = [{"username": username, "encode_data": encoding} for username, encoding in users]
+            return data_list
+        except Exception as e:
+            print(f"Error occurred: {e}")
+            return None
+        finally:
+            session.close()
+
 
 if __name__ == "__main__":
     database = DataBase()

@@ -8,14 +8,18 @@ class ActionProcessor:
         self.database = DataBase()
         self.actions = {
             "REGISTER_USER": self.register_user,
+            "GET_ENCODINGS": self.get_encodings,
         }
 
-    def process(self, action, data):
+    def process(self, action, data=None):
         action_type = action['type']
         action = self.get_callback(action_type)
         if action:
             logger.info(f"Running action with type: {action_type}")
-            action(data)
+            response = action(data)
+            if response:
+                return response
+        return None
 
     def get_callback(self, action_type):
         if action_type in self.actions:
@@ -28,3 +32,8 @@ class ActionProcessor:
         logger.info("Start register user...")
         self.database.register_user(**data)
 
+    def get_encodings(self, data=None):
+        logger.info("Start fetching data from DB...")
+        return {
+            "users": self.database.get_all_encode_data()
+        }

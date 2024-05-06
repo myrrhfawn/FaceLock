@@ -26,26 +26,32 @@ class TCPHandler(StreamRequestHandler):
             if self.data:
                 action = pickle.loads(self.data)
                 logger.info(f"action: {action}")
-                self.send_success_message()
-                if action.get("type"):
-                    self.pre_process_action(action)
-                    self.send_success_message()
-                else:
-                    # Save Message Here
+                if not action.get("type"):
                     logger.error(f"Unknown action: {action}")
                     self.send_error("UNKNOWN_ACTION_TYPE")
-                self.request.close()
+                if action.get("request") == "GET":
+                    response = self.pre_process_get_action(action)
+                    self.send_data_to_client(response)
+                elif action.get("request") == "POST":
+                    self.send_success_message()
+                    self.pre_process_post_action(action)
+                    self.send_success_message()
+            self.request.close()
         except ConnectionResetError:
             logger.warning("Connection Reset")
         except Exception:
             logger.exception("Failed to handle request")
         sys.exit(0)
 
-    def pre_process_action(self, action: dict):
+    def pre_process_post_action(self, action: dict):
         buffer_size = action['size'] if action.get('size') else 8192
         data = self.request.recv(buffer_size)
         data = pickle.loads(data)
-        self.action_processor.process(action, data)
+        return self.action_processor.process(action, data)
+
+    def pre_process_get_action(self, action: dict):
+        return self.action_processor.process(action, None)
+
 
     def send_success_message(self):
         self.request.send(pickle.dumps({
@@ -59,3 +65,24 @@ class TCPHandler(StreamRequestHandler):
             "message": message
         }))
 
+    def send_data_to_client(self, response):
+        response = pickle.dumps(response)
+        size = sys.getsizeof(response)
+        self.request.send(pickle.dumps({
+            "status": 200,
+            "size": size
+        }))
+        logger.info(f"Response: {response}")
+        self.request.send(response)
+
+
+    def send_message(self, message):
+        message = pickle.dumps(message)
+        self.client.send(message)
+        response = self.client.recv(8192)
+        if response:
+            response = pickle.loads(response)
+            if response['status'] == 200:
+                return response
+            else:
+                return response

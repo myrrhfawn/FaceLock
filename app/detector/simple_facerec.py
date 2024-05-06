@@ -8,6 +8,7 @@ from logging import getLogger
 from app.common.frame import Frame
 from fl_utils.base_logging import setup_logging
 from app.constants import  UNKNOWN_TITLE, IMAGE_FOLDER_PATH
+from app.client import FaceLockClient, GetEncodingsMessage
 setup_logging(file_name="face_detector.log")
 logger = getLogger(__name__)
 
@@ -21,7 +22,7 @@ class SimpleFaceRec():
         self.output_queue = output_queue
         self.detector_thread = threading.Thread(target=self.run_detector)
         self.stop_detector = threading.Event()
-        self.load_faces_from_folder()
+        self.reload_faces = True
 
     @staticmethod
     def prepare_image(image, encoding=False):
@@ -30,6 +31,9 @@ class SimpleFaceRec():
         return image
 
     def update_detection(self, frame):
+        if self.reload_faces:
+            self.load_faces_from_database()
+            logger.info("Faces have been updated")
         image = self.prepare_image(frame.img)
         self.last_location = self.get_face_location(image)
         self.last_detection = self.get_detections(image, self.last_location)
@@ -43,12 +47,12 @@ class SimpleFaceRec():
 
     def get_detections(self, image: np.array, locations):
         encodings = face_recognition.face_encodings(image, locations)
-        face_names = [UNKNOWN_TITLE]
-        logger.info(encodings)
+        face_names = []
+        #logger.info(f"enc: {encodings}")
         try:
             for encode in encodings:
+                logger.info(f"self.encoded_faces: {list(list(self.encoded_faces.values()))}")
                 matches = face_recognition.compare_faces(list(list(self.encoded_faces.values())), encode)
-                logger.info(f"mathes: {matches}")
                 name = UNKNOWN_TITLE
 
                 # # If a match was found in known_face_encodings, just use the first one.
@@ -58,26 +62,28 @@ class SimpleFaceRec():
 
                 # Or instead, use the known face with the smallest distance to the new face
                 face_distances = face_recognition.face_distance(list(self.encoded_faces.values()), encode)
-                best_match_index = np.argmin(face_distances)
-                if matches[best_match_index]:
-                    names = list(self.encoded_faces.keys())
-                    name = names[best_match_index]
+                if len(face_distances) > 0:
+                    best_match_index = np.argmin(face_distances)
+                    if matches[best_match_index]:
+                        names = list(self.encoded_faces.keys())
+                        name = names[best_match_index]
                 face_names.append(name)
+                logger.info(f"names: {name}")
         except Exception as e:
             logger.error(f"Error during detection: {e}")
         return face_names
 
     def get_image_with_detection(self, frame: Frame, draw: bool = False) -> Frame:
         if draw and len(self.last_location) > 0:
-            logger.info(f"last loc: {self.last_location}")
-            logger.info(f"last det: {self.last_detection}")
+            #logger.info(f"last loc: {self.last_location}")
+            #logger.info(f"last det: {self.last_detection}")
             for bbox, name in zip(self.last_location, self.last_detection):
                 y1, x1, y2, x2 = bbox[0], bbox[1], bbox[2], bbox[3]
                 image = cv2.UMat(frame.img)
 
                 cv2.rectangle(image, (x1, y1), (x2, y2), (0, 0, 200), 4)
                 font = cv2.FONT_HERSHEY_DUPLEX
-
+                #logger.info(f"name: {name}")
                 cv2.putText(image, name, (x2 + 6, y2 - 6), font, 1.0, (255, 255, 255), 1)
                 frame.img = image.get()
         frame.detection = SimpleFaceRec.get_user_from_detection(self.last_detection)
@@ -107,6 +113,30 @@ class SimpleFaceRec():
             if len(encoding) > 0:
                 self.encoded_faces[image_name.split(".")[0]] = encoding[0]
 
+    def load_faces_from_database(self):
+        try:
+            client = FaceLockClient()
+            logger.info("Getting encodings from DB...")
+            message = GetEncodingsMessage()
+            response = client.send_message(message.get_action())
+            logger.info(f"server response: {response}")
+            if response and response['status'] == 200:
+                users = client.get_data(response)
+                self.encoded_faces = {}
+                if users:
+                    for user in users['users']:
+                        self.encoded_faces[user['username']] = np.frombuffer(user['encode_data'])
+                else:
+                    logger.error("Error fetching data. No users to update")
+            else:
+                logger.error("Error fetching data. No users to update")
+
+        except Exception as e:
+            logger.error(f"Error fetching data. {e}")
+            self.reload_faces = True
+            return
+        self.reload_faces = False
+
     @staticmethod
     def get_user_from_detection(detections):
         user = UNKNOWN_TITLE
@@ -118,6 +148,6 @@ class SimpleFaceRec():
 
 
 if __name__ == "__main__":
-    img = cv2.imread("me.jpeg")
-    img = cv2.rotate(img, cv2.ROTATE_90_CLOCKWISE)
-    img = cv2.imwrite("me.jpeg", img)
+    import queue
+    det = SimpleFaceRec(queue.Queue())
+    data = det.load_faces_from_database()

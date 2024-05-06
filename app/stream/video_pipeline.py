@@ -75,6 +75,10 @@ class GStreamerPipeline(Thread):
         self.detector.start()
         self.player.set_state(Gst.State.PLAYING)
 
+    def set_reload_true(self):
+        logger.info("SET RELOAD TRUE")
+        self.detector.reload_faces = True
+
     def __load_config(self):
         config_dict = dict()
         with open(self.CONFIG_FILE, "r") as config_file:
