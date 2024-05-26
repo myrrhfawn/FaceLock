@@ -7,7 +7,7 @@ import threading
 from logging import getLogger
 from app.common.frame import Frame
 from fl_utils.base_logging import setup_logging
-from app.constants import  UNKNOWN_TITLE, IMAGE_FOLDER_PATH
+from app.constants import UNKNOWN_TITLE, IMAGE_FOLDER_PATH
 from app.client import FaceLockClient, GetEncodingsMessage
 setup_logging(file_name="face_detector.log")
 logger = getLogger(__name__)
@@ -22,7 +22,8 @@ class SimpleFaceRec():
         self.output_queue = output_queue
         self.detector_thread = threading.Thread(target=self.run_detector)
         self.stop_detector = threading.Event()
-        self.reload_faces = True
+        self.load_faces_from_database()
+        self.reload_faces = False
 
     @staticmethod
     def prepare_image(image, encoding=False):
@@ -49,9 +50,10 @@ class SimpleFaceRec():
         encodings = face_recognition.face_encodings(image, locations)
         face_names = []
         #logger.info(f"enc: {encodings}")
+
         try:
             for encode in encodings:
-                logger.info(f"self.encoded_faces: {list(list(self.encoded_faces.values()))}")
+                #logger.info(f"self.encoded_faces: {list(list(self.encoded_faces.values()))}")
                 matches = face_recognition.compare_faces(list(list(self.encoded_faces.values())), encode)
                 name = UNKNOWN_TITLE
 

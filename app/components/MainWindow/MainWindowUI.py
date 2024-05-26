@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'MainWindow2.ui'
+# Form implementation generated from reading ui file 'MainWindowUI.ui'
 #
 # Created by: PyQt5 UI code generator 5.15.10
 #
@@ -24,14 +24,16 @@ class Ui_MainWindow(object):
         MainWindow.setContextMenuPolicy(QtCore.Qt.NoContextMenu)
         MainWindow.setAcceptDrops(True)
         MainWindow.setAutoFillBackground(False)
-        MainWindow.setStyleSheet("font: 700 11pt \"Ubuntu Mono\";\n"
+        MainWindow.setStyleSheet("")
+        self.centralwidget = QtWidgets.QWidget(MainWindow)
+        self.centralwidget.setStyleSheet("QWidget {\n"
+"font: 700 11pt \"Ubuntu Mono\";\n"
 "color: #00062b;\n"
 "background-color: qradialgradient(cx:0.5, cy:0.4, radius: 0.5,\n"
 "                fx:0.5, fy:0.5, stop:0 #00062b,stop:1 #0c004b);\n"
+"}\n"
 "\n"
 "")
-        self.centralwidget = QtWidgets.QWidget(MainWindow)
-        self.centralwidget.setStyleSheet("")
         self.centralwidget.setObjectName("centralwidget")
         self.verticalLayout = QtWidgets.QVBoxLayout(self.centralwidget)
         self.verticalLayout.setObjectName("verticalLayout")
@@ -40,13 +42,13 @@ class Ui_MainWindow(object):
         self.frame.setStyleSheet("QFrame {\n"
 "    border: 0px;\n"
 "    background: transparent;\n"
-"}")
-        self.debug_label = QtWidgets.QLabel(self.centralwidget)
-        self.debug_label.setGeometry(QtCore.QRect(0, 0, 200, 30))
-        self.debug_label.setObjectName("debug_label")
-        self.debug_label.setText("Debug Label")
-        self.debug_label.setStyleSheet("background-color: none; color: white;")
-
+"}\n"
+"\n"
+"QWidget {\n"
+"    background-color: transparent;\n"
+"}\n"
+"\n"
+"")
         self.frame.setFrameShape(QtWidgets.QFrame.StyledPanel)
         self.frame.setFrameShadow(QtWidgets.QFrame.Raised)
         self.frame.setObjectName("frame")
@@ -63,15 +65,20 @@ class Ui_MainWindow(object):
         self.videoLabel.setScaledContents(True)
         self.videoLabel.setAlignment(QtCore.Qt.AlignCenter)
         self.videoLabel.setObjectName("videoLabel")
-        self.signupButton = QtWidgets.QPushButton(self.frame)
-        self.signupButton.setGeometry(QtCore.QRect(350, 540, 181, 61))
+        self.horizontalLayoutWidget = QtWidgets.QWidget(self.frame)
+        self.horizontalLayoutWidget.setGeometry(QtCore.QRect(190, 510, 501, 80))
+        self.horizontalLayoutWidget.setObjectName("horizontalLayoutWidget")
+        self.horizontalLayout = QtWidgets.QHBoxLayout(self.horizontalLayoutWidget)
+        self.horizontalLayout.setContentsMargins(0, 0, 0, 0)
+        self.horizontalLayout.setObjectName("horizontalLayout")
+        self.signupButton = QtWidgets.QPushButton(self.horizontalLayoutWidget)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Fixed)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.signupButton.sizePolicy().hasHeightForWidth())
         self.signupButton.setSizePolicy(sizePolicy)
         self.signupButton.setMinimumSize(QtCore.QSize(100, 50))
-        self.signupButton.setMaximumSize(QtCore.QSize(200, 100))
+        self.signupButton.setMaximumSize(QtCore.QSize(200, 50))
         self.signupButton.setStyleSheet("QPushButton {\n"
 "    color: white;\n"
 "    background-color: rgba(0, 0, 0, 30);\n"
@@ -85,6 +92,29 @@ class Ui_MainWindow(object):
 "}\n"
 "")
         self.signupButton.setObjectName("signupButton")
+        self.horizontalLayout.addWidget(self.signupButton)
+        self.signinButton = QtWidgets.QPushButton(self.horizontalLayoutWidget)
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Fixed)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.signinButton.sizePolicy().hasHeightForWidth())
+        self.signinButton.setSizePolicy(sizePolicy)
+        self.signinButton.setMinimumSize(QtCore.QSize(100, 50))
+        self.signinButton.setMaximumSize(QtCore.QSize(200, 50))
+        self.signinButton.setStyleSheet("QPushButton {\n"
+"    color: white;\n"
+"    background-color: rgba(0, 0, 0, 30);\n"
+"    border: none;\n"
+"    border-radius: 10px;\n"
+"    font-size: 18px\n"
+"}\n"
+"\n"
+"QPushButton:hover {\n"
+"    background-color: rgba(0, 0, 0, 45);\n"
+"}\n"
+"")
+        self.signinButton.setObjectName("signinButton")
+        self.horizontalLayout.addWidget(self.signinButton)
         self.verticalLayout.addWidget(self.frame, 0, QtCore.Qt.AlignHCenter|QtCore.Qt.AlignVCenter)
         MainWindow.setCentralWidget(self.centralwidget)
 
@@ -96,3 +126,4 @@ class Ui_MainWindow(object):
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
         self.videoLabel.setText(_translate("MainWindow", "Loading..."))
         self.signupButton.setText(_translate("MainWindow", "Sign Up"))
+        self.signinButton.setText(_translate("MainWindow", "Sign In"))

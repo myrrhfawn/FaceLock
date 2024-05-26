@@ -1,25 +1,25 @@
 import sys
 import pickle
-from socketserver import StreamRequestHandler, ThreadingMixIn
+from socketserver import StreamRequestHandler
 from server.action_processor import ActionProcessor
 from io import BytesIO
-
+from server.constants import DEFAULT_BUFFER_SIZE, HANDLER_TIMEOUT, StatusCode
 from logging import getLogger
 
 logger = getLogger(__name__)
 
 class TCPHandler(StreamRequestHandler):
     def __init__(self, *args, **kwargs):
-        self.timeout = 30
+        self.timeout = HANDLER_TIMEOUT
         self.action_processor = ActionProcessor()
         super().__init__(*args, **kwargs)
 
     def handle(self):
         try:
-            #ip_address = self.client_address[0]
             buffer = BytesIO()
-            logger.info("Request from")
-            self.data = self.request.recv(8192)
+            ip_address = self.client_address[0]
+            logger.info(f"Request from - {ip_address}")
+            self.data = self.request.recv(DEFAULT_BUFFER_SIZE)
 
             buffer.write(self.data)
             #decoded_message = buffer.getvalue().decode(encoding='utf-8', errors='ignore')
@@ -44,7 +44,7 @@ class TCPHandler(StreamRequestHandler):
         sys.exit(0)
 
     def pre_process_post_action(self, action: dict):
-        buffer_size = action['size'] if action.get('size') else 8192
+        buffer_size = action['size'] if action.get('size') else DEFAULT_BUFFER_SIZE
         data = self.request.recv(buffer_size)
         data = pickle.loads(data)
         return self.action_processor.process(action, data)
@@ -55,7 +55,7 @@ class TCPHandler(StreamRequestHandler):
 
     def send_success_message(self):
         self.request.send(pickle.dumps({
-            "status": 200,
+            "status": StatusCode.SUCCESS.value,
             "message": "SUCCESS"
         }))
 
@@ -69,7 +69,7 @@ class TCPHandler(StreamRequestHandler):
         response = pickle.dumps(response)
         size = sys.getsizeof(response)
         self.request.send(pickle.dumps({
-            "status": 200,
+            "status": StatusCode.SUCCESS.value,
             "size": size
         }))
         logger.info(f"Response: {response}")
@@ -79,10 +79,10 @@ class TCPHandler(StreamRequestHandler):
     def send_message(self, message):
         message = pickle.dumps(message)
         self.client.send(message)
-        response = self.client.recv(8192)
+        response = self.client.recv(DEFAULT_BUFFER_SIZE)
         if response:
             response = pickle.loads(response)
-            if response['status'] == 200:
+            if response['status'] == StatusCode.SUCCESS.value:
                 return response
             else:
                 return response

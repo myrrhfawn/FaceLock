@@ -35,16 +35,18 @@
    <bool>false</bool>
   </property>
   <property name="styleSheet">
-   <string notr="true">font: 700 11pt &quot;Ubuntu Mono&quot;;
-color: #00062b;
-background-color: qradialgradient(cx:0.5, cy:0.4, radius: 0.5,
-                fx:0.5, fy:0.5, stop:0 #00062b,stop:1 #0c004b);
-
-</string>
+   <string notr="true"/>
   </property>
   <widget class="QWidget" name="centralwidget">
    <property name="styleSheet">
-    <string notr="true"/>
+    <string notr="true">QWidget {
+font: 700 11pt &quot;Ubuntu Mono&quot;;
+color: #00062b;
+background-color: qradialgradient(cx:0.5, cy:0.4, radius: 0.5,
+                fx:0.5, fy:0.5, stop:0 #00062b,stop:1 #0c004b);
+}
+
+</string>
    </property>
    <layout class="QVBoxLayout" name="verticalLayout">
     <item alignment="Qt::AlignHCenter|Qt::AlignVCenter">
@@ -59,7 +61,13 @@ background-color: qradialgradient(cx:0.5, cy:0.4, radius: 0.5,
        <string notr="true">QFrame {
 	border: 0px;
 	background: transparent;
-}</string>
+}
+
+QWidget {
+	background-color: transparent;
+}
+
+</string>
       </property>
       <property name="frameShape">
        <enum>QFrame::StyledPanel</enum>
@@ -111,35 +119,38 @@ border-radius: 50% 50%;</string>
         <set>Qt::AlignCenter</set>
        </property>
       </widget>
-      <widget class="QPushButton" name="signupButton">
+      <widget class="QWidget" name="horizontalLayoutWidget">
        <property name="geometry">
         <rect>
-         <x>350</x>
-         <y>540</y>
-         <width>181</width>
-         <height>61</height>
+         <x>190</x>
+         <y>510</y>
+         <width>501</width>
+         <height>80</height>
         </rect>
        </property>
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="minimumSize">
-        <size>
-         <width>100</width>
-         <height>50</height>
-        </size>
-       </property>
-       <property name="maximumSize">
-        <size>
-         <width>200</width>
-         <height>100</height>
-        </size>
-       </property>
-       <property name="styleSheet">
-        <string notr="true">QPushButton {
+       <layout class="QHBoxLayout" name="horizontalLayout">
+        <item>
+         <widget class="QPushButton" name="signupButton">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="minimumSize">
+           <size>
+            <width>100</width>
+            <height>50</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>200</width>
+            <height>50</height>
+           </size>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">QPushButton {
 	color: white;
 	background-color: rgba(0, 0, 0, 30);
 	border: none;
@@ -151,10 +162,52 @@ QPushButton:hover {
 	background-color: rgba(0, 0, 0, 45);
 }
 </string>
-       </property>
-       <property name="text">
-        <string>Sign Up</string>
-       </property>
+          </property>
+          <property name="text">
+           <string>Sign Up</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="signinButton">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="minimumSize">
+           <size>
+            <width>100</width>
+            <height>50</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>200</width>
+            <height>50</height>
+           </size>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">QPushButton {
+	color: white;
+	background-color: rgba(0, 0, 0, 30);
+	border: none;
+	border-radius: 10px;
+	font-size: 18px
+}
+
+QPushButton:hover {
+	background-color: rgba(0, 0, 0, 45);
+}
+</string>
+          </property>
+          <property name="text">
+           <string>Sign In</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
       </widget>
      </widget>
     </item>

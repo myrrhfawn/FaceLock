@@ -7,7 +7,7 @@ from sqlalchemy import Column, DateTime, Integer, String, LargeBinary, create_en
 from sqlalchemy.orm import declarative_base
 from sqlalchemy.orm import sessionmaker
 from fl_utils.base_logging import setup_logging
-
+from server.constants import DB_NAME, DB_USER, DB_HOST, DB_PORT, DB_PASSWORD
 Base = declarative_base()
 setup_logging(file_name="db.log")
 
@@ -38,12 +38,12 @@ class DataBase:
     """Handles database operations: creating tables, adding, updating, and deleting training and inference requests."""
     def __init__(self):
         """Initialize the database connection with predefined configuration."""
-        self.dbname = "postgres"
-        self.user = "admin"
-        self.port = "5432"
-        self.host = "database"
+        self.dbname = DB_NAME
+        self.user = DB_USER
+        self.port = DB_PORT
+        self.host = DB_HOST
         self.db_url = (
-            f"postgresql+psycopg2://{self.user}:{quote('12345')}@{self.host}:{self.port}/{self.dbname}"
+            f"postgresql+psycopg2://{self.user}:{quote(DB_PASSWORD)}@{self.host}:{self.port}/{self.dbname}"
         )
         # TODO: configure reconnect
         self.engine = create_engine(

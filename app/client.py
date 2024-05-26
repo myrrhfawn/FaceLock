@@ -5,8 +5,7 @@ import pickle
 import logging
 import numpy as np
 import sys
-SERVER_HOST = '127.0.0.1'
-SERVER_PORT = 9000
+from app.constants import SERVER_HOST, SERVER_PORT
 
 logger = logging.getLogger(__name__)
 class FaceLockClient:
