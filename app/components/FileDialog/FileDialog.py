@@ -10,6 +10,7 @@ from datetime import datetime
 
 logger = getLogger(__name__)
 
+
 class FileDialog(QtWidgets.QDialog):
     def __init__(self, mainWindow, filepath, user):
         super(FileDialog, self).__init__()
@@ -22,7 +23,6 @@ class FileDialog(QtWidgets.QDialog):
         self.file_icon = cv2.imread(DEFAULT_FILE_ICON_PATH, -1)
         self.ui.label_2.setText(self.ui.label_2.text() + user)
         self.setup_labels()
-
 
     def setup_labels(self):
 
@@ -37,7 +37,9 @@ class FileDialog(QtWidgets.QDialog):
 
         # Filename
         self.ui.filenameLabel.setText(self.file_path.split("/")[-1])
-        self.ui.sizeLabel.setText(str(os.path.getsize(self.file_path) / (1024 * 1024)) + " GB")
+        self.ui.sizeLabel.setText(
+            str(os.path.getsize(self.file_path) / (1024 * 1024)) + " GB"
+        )
 
         # Last modification time
         modification_time = os.path.getmtime(self.file_path)
@@ -64,12 +66,16 @@ class FileDialog(QtWidgets.QDialog):
             rgba_image = cv2.cvtColor(cv_img, cv2.COLOR_BGRA2RGBA)
             h, w, ch = rgba_image.shape
             bytes_per_line = ch * w
-            convert_to_Qt_format = QtGui.QImage(rgba_image.data, w, h, bytes_per_line, QtGui.QImage.Format_RGBA8888)
+            convert_to_Qt_format = QtGui.QImage(
+                rgba_image.data, w, h, bytes_per_line, QtGui.QImage.Format_RGBA8888
+            )
         else:
             rgb_image = cv2.cvtColor(cv_img, cv2.COLOR_BGR2RGB)
             h, w, ch = rgb_image.shape
             bytes_per_line = ch * w
-            convert_to_Qt_format = QtGui.QImage(rgb_image.data, w, h, bytes_per_line, QtGui.QImage.Format_RGB888)
+            convert_to_Qt_format = QtGui.QImage(
+                rgb_image.data, w, h, bytes_per_line, QtGui.QImage.Format_RGB888
+            )
 
         p = convert_to_Qt_format.scaled(256, 256, QtCore.Qt.KeepAspectRatio)
         return QtGui.QPixmap.fromImage(p)

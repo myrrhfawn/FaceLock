@@ -7,6 +7,8 @@ from app.common.frame import Frame
 from app.client import FaceLockClient, RegisterUserMessage
 
 logger = getLogger(__name__)
+
+
 class RegisterDialog(QtWidgets.QDialog):
     def __init__(self, mainWindow, encoding):
         super(RegisterDialog, self).__init__()
@@ -30,15 +32,16 @@ class RegisterDialog(QtWidgets.QDialog):
         message = RegisterUserMessage(
             username=self.ui.emailInput.text(),
             password=self.ui.emailInput.text(),
-            encode_data=self.encoding)
+            encode_data=self.encoding,
+        )
         response = client.send_message(message.get_action())
-        if response['status'] != 200:
+        if response["status"] != 200:
             self.ui.debug_label.setStyleSheet("color: red;")
             self.ui.debug_label.setText("Failed to register user. Try again")
             return
         response = client.send_message(message.get_data())
         self.ui.debug_label.setText("Register success")
-        if response['status'] == 200:
+        if response["status"] == 200:
             self.ui.debug_label.setText("Register success")
             time.sleep(1)
             self.mainWindow.ui.debug_label.setText("Register successfully.")

@@ -15,30 +15,36 @@ class Ui_File(object):
     def setupUi(self, File):
         File.setObjectName("File")
         File.resize(578, 720)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed
+        )
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(File.sizePolicy().hasHeightForWidth())
         File.setSizePolicy(sizePolicy)
-        File.setStyleSheet("font: 700 11pt \"Ubuntu Mono\";\n"
-"color: #00062b;\n"
-"background-color: qradialgradient(cx:0.5, cy:0.4, radius: 0.5,\n"
-"                fx:0.5, fy:0.5, stop:0 #00062b,stop:1 #0c004b);\n"
-"\n"
-"")
+        File.setStyleSheet(
+            'font: 700 11pt "Ubuntu Mono";\n'
+            "color: #00062b;\n"
+            "background-color: qradialgradient(cx:0.5, cy:0.4, radius: 0.5,\n"
+            "                fx:0.5, fy:0.5, stop:0 #00062b,stop:1 #0c004b);\n"
+            "\n"
+            ""
+        )
         self.verticalLayout = QtWidgets.QVBoxLayout(File)
         self.verticalLayout.setObjectName("verticalLayout")
         self.frame_3 = QtWidgets.QFrame(File)
         self.frame_3.setMinimumSize(QtCore.QSize(550, 700))
         self.frame_3.setMaximumSize(QtCore.QSize(2048, 16777215))
-        self.frame_3.setStyleSheet("QFrame {\n"
-"    border: 0px;\n"
-"    background: transparent;\n"
-"}\n"
-"\n"
-"QWidget {\n"
-"    background: transparent;\n"
-"}")
+        self.frame_3.setStyleSheet(
+            "QFrame {\n"
+            "    border: 0px;\n"
+            "    background: transparent;\n"
+            "}\n"
+            "\n"
+            "QWidget {\n"
+            "    background: transparent;\n"
+            "}"
+        )
         self.frame_3.setFrameShape(QtWidgets.QFrame.StyledPanel)
         self.frame_3.setFrameShadow(QtWidgets.QFrame.Raised)
         self.frame_3.setObjectName("frame_3")
@@ -50,9 +56,7 @@ class Ui_File(object):
         font.setBold(True)
         font.setItalic(False)
         self.label_2.setFont(font)
-        self.label_2.setStyleSheet("color: white;\n"
-"font-size: 20px;\n"
-"")
+        self.label_2.setStyleSheet("color: white;\n" "font-size: 20px;\n" "")
         self.label_2.setObjectName("label_2")
         self.verticalLayoutWidget_2 = QtWidgets.QWidget(self.frame_3)
         self.verticalLayoutWidget_2.setGeometry(QtCore.QRect(60, 90, 431, 521))
@@ -63,12 +67,12 @@ class Ui_File(object):
         self.fileImgLabel = QtWidgets.QLabel(self.verticalLayoutWidget_2)
         self.fileImgLabel.setMinimumSize(QtCore.QSize(256, 256))
         self.fileImgLabel.setMaximumSize(QtCore.QSize(256, 256))
-        self.fileImgLabel.setStyleSheet("\n"
-"\n"
-"")
+        self.fileImgLabel.setStyleSheet("\n" "\n" "")
         self.fileImgLabel.setText("")
         self.fileImgLabel.setObjectName("fileImgLabel")
-        self.verticalLayout_3.addWidget(self.fileImgLabel, 0, QtCore.Qt.AlignHCenter|QtCore.Qt.AlignVCenter)
+        self.verticalLayout_3.addWidget(
+            self.fileImgLabel, 0, QtCore.Qt.AlignHCenter | QtCore.Qt.AlignVCenter
+        )
         self.horizontalLayout_2 = QtWidgets.QHBoxLayout()
         self.horizontalLayout_2.setSizeConstraint(QtWidgets.QLayout.SetFixedSize)
         self.horizontalLayout_2.setObjectName("horizontalLayout_2")
@@ -78,13 +82,14 @@ class Ui_File(object):
         self.label_3.setStyleSheet("color: white")
         self.label_3.setObjectName("label_3")
         self.horizontalLayout_2.addWidget(self.label_3)
-        spacerItem = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
+        spacerItem = QtWidgets.QSpacerItem(
+            40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum
+        )
         self.horizontalLayout_2.addItem(spacerItem)
         self.filenameLabel = QtWidgets.QLabel(self.verticalLayoutWidget_2)
         self.filenameLabel.setMinimumSize(QtCore.QSize(200, 20))
         self.filenameLabel.setMaximumSize(QtCore.QSize(16777215, 20))
-        self.filenameLabel.setStyleSheet("color: white;\n"
-"")
+        self.filenameLabel.setStyleSheet("color: white;\n" "")
         self.filenameLabel.setText("")
         self.filenameLabel.setObjectName("filenameLabel")
         self.horizontalLayout_2.addWidget(self.filenameLabel)
@@ -98,13 +103,14 @@ class Ui_File(object):
         self.label_6.setStyleSheet("color: white")
         self.label_6.setObjectName("label_6")
         self.horizontalLayout_5.addWidget(self.label_6)
-        spacerItem1 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
+        spacerItem1 = QtWidgets.QSpacerItem(
+            40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum
+        )
         self.horizontalLayout_5.addItem(spacerItem1)
         self.lastModLabel = QtWidgets.QLabel(self.verticalLayoutWidget_2)
         self.lastModLabel.setMinimumSize(QtCore.QSize(200, 0))
         self.lastModLabel.setMaximumSize(QtCore.QSize(16777215, 20))
-        self.lastModLabel.setStyleSheet("color: white;\n"
-"")
+        self.lastModLabel.setStyleSheet("color: white;\n" "")
         self.lastModLabel.setText("")
         self.lastModLabel.setObjectName("lastModLabel")
         self.horizontalLayout_5.addWidget(self.lastModLabel)
@@ -118,13 +124,14 @@ class Ui_File(object):
         self.label_7.setStyleSheet("color: white")
         self.label_7.setObjectName("label_7")
         self.horizontalLayout_6.addWidget(self.label_7)
-        spacerItem2 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
+        spacerItem2 = QtWidgets.QSpacerItem(
+            40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum
+        )
         self.horizontalLayout_6.addItem(spacerItem2)
         self.creationLabel = QtWidgets.QLabel(self.verticalLayoutWidget_2)
         self.creationLabel.setMinimumSize(QtCore.QSize(200, 20))
         self.creationLabel.setMaximumSize(QtCore.QSize(16777215, 20))
-        self.creationLabel.setStyleSheet("color: white;\n"
-"")
+        self.creationLabel.setStyleSheet("color: white;\n" "")
         self.creationLabel.setText("")
         self.creationLabel.setObjectName("creationLabel")
         self.horizontalLayout_6.addWidget(self.creationLabel)
@@ -138,13 +145,14 @@ class Ui_File(object):
         self.label_8.setStyleSheet("color: white")
         self.label_8.setObjectName("label_8")
         self.horizontalLayout_7.addWidget(self.label_8)
-        spacerItem3 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
+        spacerItem3 = QtWidgets.QSpacerItem(
+            40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum
+        )
         self.horizontalLayout_7.addItem(spacerItem3)
         self.permLabel = QtWidgets.QLabel(self.verticalLayoutWidget_2)
         self.permLabel.setMinimumSize(QtCore.QSize(200, 20))
         self.permLabel.setMaximumSize(QtCore.QSize(200, 20))
-        self.permLabel.setStyleSheet("color: white;\n"
-"")
+        self.permLabel.setStyleSheet("color: white;\n" "")
         self.permLabel.setText("")
         self.permLabel.setObjectName("permLabel")
         self.horizontalLayout_7.addWidget(self.permLabel)
@@ -158,13 +166,14 @@ class Ui_File(object):
         self.label_4.setStyleSheet("color: white")
         self.label_4.setObjectName("label_4")
         self.horizontalLayout_3.addWidget(self.label_4)
-        spacerItem4 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
+        spacerItem4 = QtWidgets.QSpacerItem(
+            40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum
+        )
         self.horizontalLayout_3.addItem(spacerItem4)
         self.userLabel = QtWidgets.QLabel(self.verticalLayoutWidget_2)
         self.userLabel.setMinimumSize(QtCore.QSize(200, 20))
         self.userLabel.setMaximumSize(QtCore.QSize(16777215, 20))
-        self.userLabel.setStyleSheet("color: white;\n"
-"")
+        self.userLabel.setStyleSheet("color: white;\n" "")
         self.userLabel.setText("")
         self.userLabel.setObjectName("userLabel")
         self.horizontalLayout_3.addWidget(self.userLabel)
@@ -178,63 +187,74 @@ class Ui_File(object):
         self.label_5.setStyleSheet("color: white")
         self.label_5.setObjectName("label_5")
         self.horizontalLayout_4.addWidget(self.label_5)
-        spacerItem5 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
+        spacerItem5 = QtWidgets.QSpacerItem(
+            40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum
+        )
         self.horizontalLayout_4.addItem(spacerItem5)
         self.sizeLabel = QtWidgets.QLabel(self.verticalLayoutWidget_2)
         self.sizeLabel.setMinimumSize(QtCore.QSize(200, 20))
         self.sizeLabel.setMaximumSize(QtCore.QSize(16777215, 20))
-        self.sizeLabel.setStyleSheet("color: white;\n"
-"")
+        self.sizeLabel.setStyleSheet("color: white;\n" "")
         self.sizeLabel.setText("")
         self.sizeLabel.setObjectName("sizeLabel")
         self.horizontalLayout_4.addWidget(self.sizeLabel)
         self.verticalLayout_3.addLayout(self.horizontalLayout_4)
-        spacerItem6 = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
+        spacerItem6 = QtWidgets.QSpacerItem(
+            20, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding
+        )
         self.verticalLayout_3.addItem(spacerItem6)
         self.horizontalLayout = QtWidgets.QHBoxLayout()
         self.horizontalLayout.setSizeConstraint(QtWidgets.QLayout.SetMinimumSize)
         self.horizontalLayout.setObjectName("horizontalLayout")
         self.decryptButton = QtWidgets.QPushButton(self.verticalLayoutWidget_2)
         self.decryptButton.setMinimumSize(QtCore.QSize(200, 50))
-        self.decryptButton.setStyleSheet("QPushButton {\n"
-"    color: white;\n"
-"    background-color: rgba(0, 0, 0, 30);\n"
-"    border: none;\n"
-"    border-radius: 10px;\n"
-"    font-size: 18px;\n"
-"}\n"
-"\n"
-"QPushButton:hover {\n"
-"    background-color: rgba(0, 0, 0, 45);\n"
-"}")
+        self.decryptButton.setStyleSheet(
+            "QPushButton {\n"
+            "    color: white;\n"
+            "    background-color: rgba(0, 0, 0, 30);\n"
+            "    border: none;\n"
+            "    border-radius: 10px;\n"
+            "    font-size: 18px;\n"
+            "}\n"
+            "\n"
+            "QPushButton:hover {\n"
+            "    background-color: rgba(0, 0, 0, 45);\n"
+            "}"
+        )
         self.decryptButton.setObjectName("decryptButton")
         self.horizontalLayout.addWidget(self.decryptButton)
-        spacerItem7 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
+        spacerItem7 = QtWidgets.QSpacerItem(
+            40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum
+        )
         self.horizontalLayout.addItem(spacerItem7)
         self.encryptButton = QtWidgets.QPushButton(self.verticalLayoutWidget_2)
         self.encryptButton.setMinimumSize(QtCore.QSize(200, 50))
-        self.encryptButton.setStyleSheet("QPushButton {\n"
-"    color: white;\n"
-"    background-color: rgba(0, 0, 0, 30);\n"
-"    border: none;\n"
-"    border-radius: 10px;\n"
-"    font-size: 18px;\n"
-"}\n"
-"\n"
-"QPushButton:hover {\n"
-"    background-color: rgba(0, 0, 0, 45);\n"
-"}")
+        self.encryptButton.setStyleSheet(
+            "QPushButton {\n"
+            "    color: white;\n"
+            "    background-color: rgba(0, 0, 0, 30);\n"
+            "    border: none;\n"
+            "    border-radius: 10px;\n"
+            "    font-size: 18px;\n"
+            "}\n"
+            "\n"
+            "QPushButton:hover {\n"
+            "    background-color: rgba(0, 0, 0, 45);\n"
+            "}"
+        )
         self.encryptButton.setObjectName("encryptButton")
         self.horizontalLayout.addWidget(self.encryptButton)
         self.verticalLayout_3.addLayout(self.horizontalLayout)
-        self.verticalLayout.addWidget(self.frame_3, 0, QtCore.Qt.AlignHCenter|QtCore.Qt.AlignVCenter)
+        self.verticalLayout.addWidget(
+            self.frame_3, 0, QtCore.Qt.AlignHCenter | QtCore.Qt.AlignVCenter
+        )
 
         self.retranslateUi(File)
         QtCore.QMetaObject.connectSlotsByName(File)
 
     def retranslateUi(self, File):
         _translate = QtCore.QCoreApplication.translate
-        File.setWindowTitle(_translate("File", "Dialog"))
+        File.setWindowTitle(_translate("FileProcessor", "FileProcessor"))
         self.label_2.setText(_translate("File", "Вітаємо, "))
         self.label_3.setText(_translate("File", "Filename:"))
         self.label_6.setText(_translate("File", "Last modification:"))

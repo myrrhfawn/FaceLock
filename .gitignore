@@ -1,4 +1,4 @@
-docker/postgres-data
+server/docker/postgres-data
 venv/*
 logs/*
 *.db

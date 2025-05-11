@@ -1,0 +1,24 @@
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v5.0.0
+    hooks:
+      - id: end-of-file-fixer
+      - id: mixed-line-ending
+      - id: requirements-txt-fixer
+      - id: trailing-whitespace
+      - id: check-added-large-files
+        exclude: amr/amr_pallet_locator/test_data/|amr/amr_pallet_transportation/test_data|amr/amr_lowlevel_controller/sick
+  - repo: https://github.com/psf/black
+    rev: 22.3.0
+    hooks:
+      - id: black
+        args: [--fast]
+  - repo: https://github.com/pre-commit/mirrors-prettier
+    rev: v3.0.3
+    hooks:
+      - id: prettier
+        additional_dependencies:
+          - prettier@3.0.3
+          - "@prettier/plugin-xml@3.2.2"
+        types_or: [javascript, html, css, xml, yaml, markdown]
+        args: [--print-width=120]

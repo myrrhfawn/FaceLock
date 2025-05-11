@@ -8,6 +8,8 @@ import sys
 from app.constants import SERVER_HOST, SERVER_PORT
 
 logger = logging.getLogger(__name__)
+
+
 class FaceLockClient:
     def __init__(self):
         self.client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -19,13 +21,13 @@ class FaceLockClient:
         response = self.client.recv(8192)
         if response:
             response = pickle.loads(response)
-            if response['status'] == 200:
+            if response["status"] == 200:
                 return response
             else:
                 return response
 
     def get_data(self, response):
-        buffer_size = response['size'] if response.get('size') else 8192
+        buffer_size = response["size"] if response.get("size") else 8192
         data = self.client.recv(buffer_size)
         return pickle.loads(data)
 
@@ -42,24 +44,27 @@ class Message:
         return {
             "request": self.request_type,
             "type": self.action_type,
-            "size": sys.getsizeof(pickle.dumps(self.__dict__()))
+            "size": sys.getsizeof(pickle.dumps(self.__dict__())),
         }
 
     def get_data(self):
         return self.__dict__()
+
 
 class RegisterUserMessage(Message):
     def __init__(self, username: str, password: str, encode_data: list):
         super().__init__("POST", "REGISTER_USER")
         self.username = username
         self.password = password
-        self.encode_data = encode_data.tobytes() # np.frombuffer(encode_data) to convert back
+        self.encode_data = (
+            encode_data.tobytes()
+        )  # np.frombuffer(encode_data) to convert back
 
     def __dict__(self):
         return {
             "username": self.username,
             "password": self.password,
-            "encode_data": self.encode_data
+            "encode_data": self.encode_data,
         }
 
 

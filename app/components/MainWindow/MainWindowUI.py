@@ -15,7 +15,9 @@ class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
         MainWindow.resize(1024, 720)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed
+        )
         sizePolicy.setHorizontalStretch(1)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(MainWindow.sizePolicy().hasHeightForWidth())
@@ -26,45 +28,66 @@ class Ui_MainWindow(object):
         MainWindow.setAutoFillBackground(False)
         MainWindow.setStyleSheet("")
         self.centralwidget = QtWidgets.QWidget(MainWindow)
-        self.centralwidget.setStyleSheet("QWidget {\n"
-"font: 700 11pt \"Ubuntu Mono\";\n"
-"color: #00062b;\n"
-"background-color: qradialgradient(cx:0.5, cy:0.4, radius: 0.5,\n"
-"                fx:0.5, fy:0.5, stop:0 #00062b,stop:1 #0c004b);\n"
-"}\n"
-"\n"
-"")
+        self.centralwidget.setStyleSheet(
+            "QWidget {\n"
+            'font: 700 11pt "Ubuntu Mono";\n'
+            "color: #00062b;\n"
+            "background-color: qradialgradient(cx:0.5, cy:0.4, radius: 0.5,\n"
+            "                fx:0.5, fy:0.5, stop:0 #00062b,stop:1 #0c004b);\n"
+            "}\n"
+            "\n"
+            ""
+        )
         self.centralwidget.setObjectName("centralwidget")
         self.verticalLayout = QtWidgets.QVBoxLayout(self.centralwidget)
         self.verticalLayout.setObjectName("verticalLayout")
         self.frame = QtWidgets.QFrame(self.centralwidget)
         self.frame.setMinimumSize(QtCore.QSize(860, 600))
-        self.frame.setStyleSheet("QFrame {\n"
-"    border: 0px;\n"
-"    background: transparent;\n"
-"}\n"
-"\n"
-"QWidget {\n"
-"    background-color: transparent;\n"
-"}\n"
-"\n"
-"")
+        self.frame.setStyleSheet(
+            "QFrame {\n"
+            "    border: 0px;\n"
+            "    background: transparent;\n"
+            "}\n"
+            "\n"
+            "QWidget {\n"
+            "    background-color: transparent;\n"
+            "}\n"
+            "\n"
+            ""
+        )
         self.frame.setFrameShape(QtWidgets.QFrame.StyledPanel)
         self.frame.setFrameShadow(QtWidgets.QFrame.Raised)
         self.frame.setObjectName("frame")
-        self.videoLabel = QtWidgets.QLabel(self.frame)
-        self.videoLabel.setGeometry(QtCore.QRect(2, 0, 854, 480))
-        self.videoLabel.setMinimumSize(QtCore.QSize(854, 480))
-        self.videoLabel.setMaximumSize(QtCore.QSize(854, 480))
-        self.videoLabel.setBaseSize(QtCore.QSize(200, 200))
-        self.videoLabel.setStyleSheet("color: white;\n"
-"font-size: 24px;\n"
-"background-color: none;\n"
-"border: 1px solid #0062d0;\n"
-"border-radius: 50% 50%;")
+        # Wrapper із рамкою
+        self.borderWrapperLabel = QtWidgets.QLabel(self.frame)
+        self.borderWrapperLabel.setGeometry(QtCore.QRect(2, 0, 854, 480))
+        self.borderWrapperLabel.setMinimumSize(QtCore.QSize(854, 480))
+        self.borderWrapperLabel.setMaximumSize(QtCore.QSize(854, 480))
+        self.borderWrapperLabel.setStyleSheet(
+            """
+            background-color: none;
+            border: 2px solid #0062d0;
+            border-radius: 40px;
+        """
+        )
+        self.borderWrapperLabel.setAlignment(QtCore.Qt.AlignCenter)
+        self.borderWrapperLabel.setObjectName("borderWrapperLabel")
+
+        # Внутрішній QLabel для зображення
+        self.videoLabel = QtWidgets.QLabel(self.borderWrapperLabel)
+        self.videoLabel.setGeometry(QtCore.QRect(10, 10, 834, 460))  # padding 20px
+        self.videoLabel.setStyleSheet("background-color: transparent;")
         self.videoLabel.setScaledContents(True)
         self.videoLabel.setAlignment(QtCore.Qt.AlignCenter)
         self.videoLabel.setObjectName("videoLabel")
+        self.videoLabel.setStyleSheet(
+            """
+            background-color: transparent;
+            border: none;
+            color: white;
+            font-size: 24px;
+        """
+        )
         self.horizontalLayoutWidget = QtWidgets.QWidget(self.frame)
         self.horizontalLayoutWidget.setGeometry(QtCore.QRect(190, 510, 501, 80))
         self.horizontalLayoutWidget.setObjectName("horizontalLayoutWidget")
@@ -72,50 +95,60 @@ class Ui_MainWindow(object):
         self.horizontalLayout.setContentsMargins(0, 0, 0, 0)
         self.horizontalLayout.setObjectName("horizontalLayout")
         self.signupButton = QtWidgets.QPushButton(self.horizontalLayoutWidget)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Fixed)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Fixed
+        )
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.signupButton.sizePolicy().hasHeightForWidth())
         self.signupButton.setSizePolicy(sizePolicy)
         self.signupButton.setMinimumSize(QtCore.QSize(100, 50))
         self.signupButton.setMaximumSize(QtCore.QSize(200, 50))
-        self.signupButton.setStyleSheet("QPushButton {\n"
-"    color: white;\n"
-"    background-color: rgba(0, 0, 0, 30);\n"
-"    border: none;\n"
-"    border-radius: 10px;\n"
-"    font-size: 18px\n"
-"}\n"
-"\n"
-"QPushButton:hover {\n"
-"    background-color: rgba(0, 0, 0, 45);\n"
-"}\n"
-"")
+        self.signupButton.setStyleSheet(
+            "QPushButton {\n"
+            "    color: white;\n"
+            "    background-color: rgba(0, 0, 0, 30);\n"
+            "    border: none;\n"
+            "    border-radius: 10px;\n"
+            "    font-size: 18px\n"
+            "}\n"
+            "\n"
+            "QPushButton:hover {\n"
+            "    background-color: rgba(0, 0, 0, 45);\n"
+            "}\n"
+            ""
+        )
         self.signupButton.setObjectName("signupButton")
         self.horizontalLayout.addWidget(self.signupButton)
         self.signinButton = QtWidgets.QPushButton(self.horizontalLayoutWidget)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Fixed)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Fixed
+        )
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.signinButton.sizePolicy().hasHeightForWidth())
         self.signinButton.setSizePolicy(sizePolicy)
         self.signinButton.setMinimumSize(QtCore.QSize(100, 50))
         self.signinButton.setMaximumSize(QtCore.QSize(200, 50))
-        self.signinButton.setStyleSheet("QPushButton {\n"
-"    color: white;\n"
-"    background-color: rgba(0, 0, 0, 30);\n"
-"    border: none;\n"
-"    border-radius: 10px;\n"
-"    font-size: 18px\n"
-"}\n"
-"\n"
-"QPushButton:hover {\n"
-"    background-color: rgba(0, 0, 0, 45);\n"
-"}\n"
-"")
+        self.signinButton.setStyleSheet(
+            "QPushButton {\n"
+            "    color: white;\n"
+            "    background-color: rgba(0, 0, 0, 30);\n"
+            "    border: none;\n"
+            "    border-radius: 10px;\n"
+            "    font-size: 18px\n"
+            "}\n"
+            "\n"
+            "QPushButton:hover {\n"
+            "    background-color: rgba(0, 0, 0, 45);\n"
+            "}\n"
+            ""
+        )
         self.signinButton.setObjectName("signinButton")
         self.horizontalLayout.addWidget(self.signinButton)
-        self.verticalLayout.addWidget(self.frame, 0, QtCore.Qt.AlignHCenter|QtCore.Qt.AlignVCenter)
+        self.verticalLayout.addWidget(
+            self.frame, 0, QtCore.Qt.AlignHCenter | QtCore.Qt.AlignVCenter
+        )
         MainWindow.setCentralWidget(self.centralwidget)
 
         self.retranslateUi(MainWindow)
@@ -123,7 +156,7 @@ class Ui_MainWindow(object):
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
-        MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
+        MainWindow.setWindowTitle(_translate("FaceLock", "FaceLock"))
         self.videoLabel.setText(_translate("MainWindow", "Loading..."))
         self.signupButton.setText(_translate("MainWindow", "Sign Up"))
         self.signinButton.setText(_translate("MainWindow", "Sign In"))

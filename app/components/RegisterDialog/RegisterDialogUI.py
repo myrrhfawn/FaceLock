@@ -14,83 +14,85 @@ from logging import getLogger
 logger = getLogger(__name__)
 
 
-
-
 class Ui_Register(object):
     def setupUi(self, Register):
         Register.setObjectName("Register")
         Register.resize(1280, 720)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed
+        )
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(Register.sizePolicy().hasHeightForWidth())
         Register.setSizePolicy(sizePolicy)
-        Register.setStyleSheet("font: 700 11pt \"Ubuntu Mono\";\n"
-"color: #00062b;\n"
-"background-color: qradialgradient(cx:0.5, cy:0.4, radius: 0.5,\n"
-"                fx:0.5, fy:0.5, stop:0 #00062b,stop:1 #0c004b);\n"
-"\n"
-"")
+        Register.setStyleSheet(
+            'font: 700 11pt "Ubuntu Mono";\n'
+            "color: #00062b;\n"
+            "background-color: qradialgradient(cx:0.5, cy:0.4, radius: 0.5,\n"
+            "                fx:0.5, fy:0.5, stop:0 #00062b,stop:1 #0c004b);\n"
+            "\n"
+            ""
+        )
         self.verticalLayout = QtWidgets.QVBoxLayout(Register)
         self.verticalLayout.setObjectName("verticalLayout")
         self.frame = QtWidgets.QFrame(Register)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Preferred)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Preferred
+        )
         sizePolicy.setHorizontalStretch(50)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.frame.sizePolicy().hasHeightForWidth())
         self.frame.setSizePolicy(sizePolicy)
         self.frame.setMinimumSize(QtCore.QSize(400, 300))
-        self.frame.setStyleSheet("QFrame {\n"
-"    background: transparent;\n"
-"}")
+        self.frame.setStyleSheet("QFrame {\n" "    background: transparent;\n" "}")
         self.frame.setFrameShape(QtWidgets.QFrame.StyledPanel)
         self.frame.setFrameShadow(QtWidgets.QFrame.Raised)
         self.frame.setObjectName("frame")
         self.emailInput = QtWidgets.QLineEdit(self.frame)
         self.emailInput.setGeometry(QtCore.QRect(50, 190, 291, 41))
-        self.emailInput.setStyleSheet("padding: 12px 20px;\n"
-"color: white;")
+        self.emailInput.setStyleSheet("padding: 12px 20px;\n" "color: white;")
         self.emailInput.setObjectName("emailInput")
         self.passInput = QtWidgets.QLineEdit(self.frame)
         self.passInput.setGeometry(QtCore.QRect(50, 250, 291, 43))
-        self.passInput.setStyleSheet("padding: 12px 20px;\n"
-"color: white;")
+        self.passInput.setStyleSheet("padding: 12px 20px;\n" "color: white;")
         self.passInput.setEchoMode(QtWidgets.QLineEdit.Password)
         self.passInput.setObjectName("passInput")
         self.label = QtWidgets.QLabel(self.frame)
         self.label.setGeometry(QtCore.QRect(140, 120, 101, 51))
-        self.label.setStyleSheet("font-size:24px;\n"
-"color: white;\n"
-"")
+        self.label.setStyleSheet("font-size:24px;\n" "color: white;\n" "")
         self.label.setObjectName("label")
-        self.verticalLayout.addWidget(self.frame, 0, QtCore.Qt.AlignHCenter|QtCore.Qt.AlignBottom)
+        self.verticalLayout.addWidget(
+            self.frame, 0, QtCore.Qt.AlignHCenter | QtCore.Qt.AlignBottom
+        )
         self.frame_2 = QtWidgets.QFrame(Register)
         self.frame_2.setMinimumSize(QtCore.QSize(400, 100))
-        self.frame_2.setStyleSheet("QFrame {\n"
-"    background: transparent;\n"
-"}")
+        self.frame_2.setStyleSheet("QFrame {\n" "    background: transparent;\n" "}")
         self.frame_2.setFrameShape(QtWidgets.QFrame.StyledPanel)
         self.frame_2.setFrameShadow(QtWidgets.QFrame.Raised)
         self.frame_2.setObjectName("frame_2")
         self.cancelButton = QtWidgets.QPushButton(self.frame_2)
         self.cancelButton.setGeometry(QtCore.QRect(50, 0, 100, 50))
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Fixed)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Fixed
+        )
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.cancelButton.sizePolicy().hasHeightForWidth())
         self.cancelButton.setSizePolicy(sizePolicy)
         self.cancelButton.setMinimumSize(QtCore.QSize(100, 50))
         self.cancelButton.setMaximumSize(QtCore.QSize(100, 50))
-        self.cancelButton.setStyleSheet("QPushButton {\n"
-"    color: white;\n"
-"    background-color: rgba(0, 0, 0, 30);\n"
-"    border: none;\n"
-"    border-radius: 10px;\n"
-"}\n"
-"\n"
-"QPushButton:hover {\n"
-"    background-color: rgba(0, 0, 0, 45);\n"
-"}")
+        self.cancelButton.setStyleSheet(
+            "QPushButton {\n"
+            "    color: white;\n"
+            "    background-color: rgba(0, 0, 0, 30);\n"
+            "    border: none;\n"
+            "    border-radius: 10px;\n"
+            "}\n"
+            "\n"
+            "QPushButton:hover {\n"
+            "    background-color: rgba(0, 0, 0, 45);\n"
+            "}"
+        )
         self.debug_label = QtWidgets.QLabel(Register)
         self.debug_label.setGeometry(QtCore.QRect(0, 0, 200, 30))
         self.debug_label.setObjectName("debug_label")
@@ -99,25 +101,33 @@ class Ui_Register(object):
         self.cancelButton.setObjectName("cancelButton")
         self.registerButton = QtWidgets.QPushButton(self.frame_2)
         self.registerButton.setGeometry(QtCore.QRect(240, 0, 100, 50))
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Fixed)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Fixed
+        )
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.registerButton.sizePolicy().hasHeightForWidth())
+        sizePolicy.setHeightForWidth(
+            self.registerButton.sizePolicy().hasHeightForWidth()
+        )
         self.registerButton.setSizePolicy(sizePolicy)
         self.registerButton.setMinimumSize(QtCore.QSize(100, 50))
         self.registerButton.setMaximumSize(QtCore.QSize(100, 50))
-        self.registerButton.setStyleSheet("QPushButton {\n"
-"    color: white;\n"
-"    background-color: rgba(0, 0, 0, 30);\n"
-"    border: none;\n"
-"    border-radius: 10px;\n"
-"}\n"
-"\n"
-"QPushButton:hover {\n"
-"    background-color: rgba(0, 0, 0, 45);\n"
-"}")
+        self.registerButton.setStyleSheet(
+            "QPushButton {\n"
+            "    color: white;\n"
+            "    background-color: rgba(0, 0, 0, 30);\n"
+            "    border: none;\n"
+            "    border-radius: 10px;\n"
+            "}\n"
+            "\n"
+            "QPushButton:hover {\n"
+            "    background-color: rgba(0, 0, 0, 45);\n"
+            "}"
+        )
         self.registerButton.setObjectName("registerButton")
-        self.verticalLayout.addWidget(self.frame_2, 0, QtCore.Qt.AlignHCenter|QtCore.Qt.AlignTop)
+        self.verticalLayout.addWidget(
+            self.frame_2, 0, QtCore.Qt.AlignHCenter | QtCore.Qt.AlignTop
+        )
         self.frame_2.raise_()
         self.frame.raise_()
 
@@ -126,7 +136,7 @@ class Ui_Register(object):
 
     def retranslateUi(self, Register):
         _translate = QtCore.QCoreApplication.translate
-        Register.setWindowTitle(_translate("Register", "Dialog"))
+        Register.setWindowTitle(_translate("Register", "Register"))
         self.emailInput.setText(_translate("Register", "Email"))
         self.passInput.setText(_translate("Register", "Password"))
         self.label.setText(_translate("Register", "Register"))

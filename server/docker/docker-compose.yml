@@ -12,8 +12,6 @@ services:
       - "/data/FaceLock/server:/server"
     ports:
       - "9000:9000"
-    environment:
-      PYTHONPATH: /
     restart: "always"
     depends_on:
       - db

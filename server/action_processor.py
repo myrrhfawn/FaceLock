@@ -1,7 +1,9 @@
-from server.db import DataBase
+from db import DataBase
 from logging import getLogger
 import pickle
+
 logger = getLogger(__name__)
+
 
 class ActionProcessor:
     def __init__(self):
@@ -12,7 +14,7 @@ class ActionProcessor:
         }
 
     def process(self, action, data=None):
-        action_type = action['type']
+        action_type = action["type"]
         action = self.get_callback(action_type)
         if action:
             logger.info(f"Running action with type: {action_type}")
@@ -34,6 +36,4 @@ class ActionProcessor:
 
     def get_encodings(self, data=None):
         logger.info("Start fetching data from DB...")
-        return {
-            "users": self.database.get_all_encode_data()
-        }
+        return {"users": self.database.get_all_encode_data()}
