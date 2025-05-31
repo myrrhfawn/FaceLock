@@ -23,12 +23,35 @@ MIN_DETECTION_FPS = 0
 REGISTER_BUTTON_TIMEOUT = 3
 
 # FileWindow
-DEFAULT_FILE_ICON_PATH = "/data/FaceLock/app/components/src/file.png"
-FL_FILE_ICON_PATH = "/data/FaceLock/app/components/src/encrypted-file.png"
+DEFAULT_FILE_ICON_PATH = "components/src/file_icons/file.png"
+NOT_FOUND_ICON_PATH = "components/src/file_icons/not-found.png"
+FL_FILE_ICON_PATH = "components/src/file_icons/encrypted-file.png"
 
 
 class Extensions(Enum):
-    FL = "fl"
+    FL = ("fl", FL_FILE_ICON_PATH)
+    TXT = ("txt", DEFAULT_FILE_ICON_PATH)
+    PDF = ("pdf", DEFAULT_FILE_ICON_PATH)
+    JPG = ("jpg", DEFAULT_FILE_ICON_PATH)
+    JPEG = ("jpeg", DEFAULT_FILE_ICON_PATH)
+    PNG = ("png", DEFAULT_FILE_ICON_PATH)
+    ZIP = ("zip", DEFAULT_FILE_ICON_PATH)
+    RAR = ("rar", DEFAULT_FILE_ICON_PATH)
+    UNKNOWN = ("not_found", NOT_FOUND_ICON_PATH)
+
+    def __new__(cls, ext: str, icon_path: str,):
+        """Make possible call TrainType('confidence')"""
+        obj = object.__new__(cls)
+        obj._value_ = ext
+        return obj
+
+    def __init__(self, ext: str, icon_path: str):
+        self._ext = ext
+        self._icon_path = icon_path
+
+    @property
+    def icon_path(self) -> str:
+        return self._icon_path
 
 
 # SimpleFaceRec

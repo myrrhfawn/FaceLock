@@ -3,8 +3,8 @@ import time
 from PyQt5 import QtWidgets, QtCore
 from logging import getLogger
 from app.components.RegisterDialog.RegisterDialogUI import Ui_Register
-from app.common.frame import Frame
 from app.client import FaceLockClient, RegisterUserMessage
+from app.crypto.rsa_crypto_provider import RsaCryptoProvider
 
 logger = getLogger(__name__)
 
@@ -20,6 +20,7 @@ class RegisterDialog(QtWidgets.QDialog):
         self.value = 1
         self.ui.cancelButton.clicked.connect(self.cancel_button_click)
         self.ui.registerButton.clicked.connect(self.register_button_click)
+        self.rsa_provider = RsaCryptoProvider()
 
     @QtCore.pyqtSlot()
     def cancel_button_click(self):
@@ -29,10 +30,14 @@ class RegisterDialog(QtWidgets.QDialog):
     @QtCore.pyqtSlot()
     def register_button_click(self):
         client = FaceLockClient()
+        public_key, private_key = self.rsa_provider.generate_key_pair()
+        # TODO: Strore private key securely
+        logger.info("Encodings: {}".format(self.encoding))
         message = RegisterUserMessage(
             username=self.ui.emailInput.text(),
             password=self.ui.emailInput.text(),
             encode_data=self.encoding,
+            public_key=public_key,
         )
         response = client.send_message(message.get_action())
         if response["status"] != 200:
@@ -41,11 +46,12 @@ class RegisterDialog(QtWidgets.QDialog):
             return
         response = client.send_message(message.get_data())
         self.ui.debug_label.setText("Register success")
-        if response["status"] == 200:
+        if response and response["status"] == 200:
             self.ui.debug_label.setText("Register success")
             time.sleep(1)
-            self.mainWindow.ui.debug_label.setText("Register successfully.")
-            self.mainWindow.video_stream.set_reload_true()
+            # TODO: RELOAD VIDEO STREAM
+            # self.mainWindow.ui.debug_label.setText("Register successfully.")
+            self.mainWindow.stream.video_stream.set_reload_true()
             self.mainWindow.show()
             self.close()
         else:

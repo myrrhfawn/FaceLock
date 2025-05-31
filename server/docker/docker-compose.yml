@@ -9,7 +9,7 @@ services:
     expose:
       - "9000"
     volumes:
-      - "/data/FaceLock/server:/server"
+      - "/data/my_projects/FaceLock/server:/app"
     ports:
       - "9000:9000"
     restart: "always"

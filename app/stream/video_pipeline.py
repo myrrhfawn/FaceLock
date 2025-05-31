@@ -4,7 +4,7 @@ import gi
 
 gi.require_version("Gst", "1.0")
 
-from app.utils import setup_logging
+from app.common.base_logging import setup_logging
 from gi.repository import Gst
 from logging import getLogger
 from app.constants import SHOW_DETECTION, PYRO_SERIALIZER

@@ -26,6 +26,7 @@ class VideoStreamWorker(QtCore.QObject):
         self.thread = QtCore.QThread()
         self.moveToThread(self.thread)
         self.thread.started.connect(self.run)
+        self.current_frame = Frame()
 
     @QtCore.pyqtSlot()
     def run(self):
@@ -37,6 +38,7 @@ class VideoStreamWorker(QtCore.QObject):
                     frame = self.video_stream.get_frame(detection=True)
 
                     self.frame_ready.emit(frame)
+                    self.current_frame = frame
 
                     if (time.time() - unknown_det_time) > REGISTER_BUTTON_TIMEOUT:
                         unknown_det_time = time.time()
@@ -45,6 +47,13 @@ class VideoStreamWorker(QtCore.QObject):
                 logger.warning("Video stream thread error: {}".format(e))
                 time.sleep(1)
         logger.info("Video stream thread stopped")
+
+    def get_frame(self, detection: bool = False):
+        """
+        Returns latest frame from the video stream.
+        Frame is stored as a Frame object.
+        """
+        return self.current_frame
 
     def start(self):
         self.thread.start()

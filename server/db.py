@@ -5,7 +5,6 @@ from urllib.parse import quote
 from sqlalchemy import Column, DateTime, Integer, String, LargeBinary, create_engine
 from sqlalchemy.orm import declarative_base
 from sqlalchemy.orm import sessionmaker
-from utils.base_logging import setup_logging
 from constants import DB_NAME, DB_USER, DB_HOST, DB_PORT, DB_PASSWORD
 
 Base = declarative_base()
@@ -23,6 +22,7 @@ class User(Base):
     password = Column(String(255))
     created_at = Column(DateTime, default=datetime.utcnow)
     encode_data = Column(LargeBinary)
+    public_key = Column(LargeBinary)
 
     def __str__(self):
         return f"User [ID: {self.id}, username: {self.username}, created_at: {self.created_at} ]"
@@ -49,11 +49,11 @@ class DataBase:
         )
         self.Session = sessionmaker(bind=self.engine)
 
-    def register_user(self, username, password, encode_data=None):
+    def register_user(self, username, password, public_key, encode_data=None):
         session = self.Session()
         try:
             logger.info("Adding new user into DB.")
-            user = User(username=username, password=password, encode_data=encode_data)
+            user = User(username=username, password=password, encode_data=encode_data, public_key=public_key)
             session.add(user)
             session.commit()
             logger.info(f"Added user with username: {username}")
@@ -95,6 +95,24 @@ class DataBase:
         finally:
             session.close()
 
+    def get_user_by_username(self, username):
+        session = self.Session()
+        try:
+            user = session.query(User).filter_by(username=username).first()
+            if user:
+                return {
+                    "username": user.username,
+                    "encode_data": user.encode_data,
+                    "public_key": user.public_key,
+                }
+            else:
+                logger.warning(f"User {username} not found.")
+                return None
+        except Exception as e:
+            logger.error(f"Error fetching user {username}: {e}")
+            return None
+        finally:
+            session.close()
 
 if __name__ == "__main__":
     database = DataBase()

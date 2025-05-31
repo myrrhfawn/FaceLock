@@ -1,6 +1,8 @@
 import cv2
 import stat
 from PyQt5 import QtCore, QtGui, QtWidgets
+
+from app.client import FaceLockClient, GetUserMessage
 from app.components.FileDialog.FileDialogUI import Ui_File
 from logging import getLogger
 from app.constants import DEFAULT_FILE_ICON_PATH, FL_FILE_ICON_PATH, Extensions
@@ -12,27 +14,53 @@ logger = getLogger(__name__)
 
 
 class FileDialog(QtWidgets.QDialog):
-    def __init__(self, mainWindow, filepath, user):
+    def __init__(self, mainWindow, filepath, user_name: str):
+        """ Initializes the FileDialog."""
         super(FileDialog, self).__init__()
         self.ui = Ui_File()
         self.ui.setupUi(self)
         self.ui.decryptButton.clicked.connect(self.decrypt_button_click)
         self.ui.encryptButton.clicked.connect(self.encrypt_button_click)
         self.mainWindow = mainWindow
-        self.file_path = filepath
+        self.base_path = os.getcwd()
+        self.file_path = self.get_absolute_path(filepath)
         self.file_icon = cv2.imread(DEFAULT_FILE_ICON_PATH, -1)
-        self.ui.label_2.setText(self.ui.label_2.text() + user)
+        self.ui.label_2.setText(self.ui.label_2.text() + user_name)
         self.setup_labels()
+        self.client = FaceLockClient()
+        self.user = self.init_user(user_name)
+
+    def init_user(self, user_name: str):
+        message = GetUserMessage(username=user_name)
+        response = self.client.send_message(message.get_action())
+        logger.info(f"server response: {response}")
+        if response and response["status"] == 200:
+            return self.client.get_data(response)
+
+
+    def get_absolute_path(self, relative_path: str) -> str:
+        """
+        Returns absolute path to the file.
+        """
+        return os.path.abspath(os.path.join(self.base_path, relative_path))
 
     def setup_labels(self):
-
         # Set file icon
+
+        if not os.path.exists(self.file_path):
+            logger.error(f"File {self.file_path} does not exist.")
+            self.set_file_icon(
+                cv2.imread(self.get_absolute_path(Extensions.UNKNOWN.icon_path), -1)
+            )
+            return
+
         ext = self.file_path.split(".")[-1]
 
         if Extensions(ext) == Extensions.FL:
-            self.file_icon = cv2.imread(FL_FILE_ICON_PATH, -1)
+            self.file_icon = cv2.imread(self.get_absolute_path(FL_FILE_ICON_PATH), -1)
         else:
-            self.file_icon = cv2.imread(DEFAULT_FILE_ICON_PATH, -1)
+            self.file_icon = cv2.imread(self.get_absolute_path(DEFAULT_FILE_ICON_PATH), -1)
+
         self.set_file_icon(self.file_icon)
 
         # Filename

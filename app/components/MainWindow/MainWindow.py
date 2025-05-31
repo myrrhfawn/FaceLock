@@ -49,7 +49,7 @@ class FaceLockApp(QtWidgets.QMainWindow):
         logger.info("Sign in...")
         if self.user_last_det is not None:
             fileWindow = FileDialog(
-                mainWindow=self, filepath=self.filepath, user=self.user_last_det
+                mainWindow=self, filepath=self.filepath, user_name=self.user_last_det
             )
             self.hide()
             fileWindow.show()
@@ -62,11 +62,13 @@ class FaceLockApp(QtWidgets.QMainWindow):
         logger.info("Register user...")
         frame = Frame()
         while frame.detection != UNKNOWN_TITLE:
-            if self.video_stream.is_frame_ready():
-                frame = self.video_stream.get_frame(detection=True, show_det=False)
+            frame = self.stream.get_frame()
         encoding = prepare_image(frame.img, encoding=True)
         if len(encoding) > 0:
             encoding = encoding[0]
+        if len(encoding) == 0:
+            self.ui.debug_label.setText("No face detected. Try Again")
+            return
 
         registerDialog = RegisterDialog(mainWindow=self, encoding=encoding)
         self.hide()

@@ -7,7 +7,7 @@ def main():
     argv = sys.argv[1:]
     print(f"argv: {argv}")
     app = QtWidgets.QApplication(sys.argv)
-    window = FaceLockApp("/data/FaceLock/app/test.fl")
+    window = FaceLockApp("test.fl")
     window.show()
     window.stream.start()
     sys.exit(app.exec())

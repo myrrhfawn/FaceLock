@@ -52,19 +52,22 @@ class Message:
 
 
 class RegisterUserMessage(Message):
-    def __init__(self, username: str, password: str, encode_data: list):
+    def __init__(self, username: str, password: str, encode_data: list, public_key: bytes):
+        """ Initializes a message for registering a user. """
         super().__init__("POST", "REGISTER_USER")
         self.username = username
         self.password = password
         self.encode_data = (
             encode_data.tobytes()
         )  # np.frombuffer(encode_data) to convert back
+        self.public_key = public_key
 
     def __dict__(self):
         return {
             "username": self.username,
             "password": self.password,
             "encode_data": self.encode_data,
+            "public_key": self.public_key,
         }
 
 
@@ -74,3 +77,13 @@ class GetEncodingsMessage(Message):
 
     def __dict__(self):
         return {}
+
+
+class GetUserMessage(Message):
+    def __init__(self, username: str):
+        """ Initializes a message for getting user data. """
+        super().__init__("GET", "GET_USER")
+        self.username = username
+
+    def __dict__(self):
+        return {"username": self.username}

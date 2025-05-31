@@ -11,6 +11,7 @@ class ActionProcessor:
         self.actions = {
             "REGISTER_USER": self.register_user,
             "GET_ENCODINGS": self.get_encodings,
+            "GET_USER": self.get_user,
         }
 
     def process(self, action, data=None):
@@ -37,3 +38,16 @@ class ActionProcessor:
     def get_encodings(self, data=None):
         logger.info("Start fetching data from DB...")
         return {"users": self.database.get_all_encode_data()}
+
+    def get_user(self, data):
+        logger.info("Start fetching user from DB...")
+        username = data.get("username")
+        if not username:
+            logger.error("Username is required to fetch user data.")
+            return None
+        user_data = self.database.get_user_by_username(username)
+        if user_data:
+            return user_data
+        else:
+            logger.warning(f"User {username} not found.")
+            return None
