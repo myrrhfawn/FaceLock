@@ -2,6 +2,8 @@
 
 FaceLock is a program to protect your PC using facial recognition and data encryption.
 
+https://github.com/user-attachments/assets/1254a9f2-8024-40a0-809b-05a094fbdd05
+
 Technical stack:
 
 TCP server:
