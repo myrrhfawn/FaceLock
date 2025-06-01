@@ -4,9 +4,18 @@ logs/*
 /app/dist/
 /app/build/
 /app/keys/
-/.idea/
 /.vscode/
 
 # Ignore Python cache files
 __pycache__/
 *.pyc
+
+# Pycharm specific files
+**/.idea/vcs.xml
+**/.idea/shelf
+**/.idea/deployment.xml
+**/.idea/sshConfigs.xml
+**/.idea/misc.xml
+**/.idea/deep_cv.iml
+.idea/workspace.xml
+.idea/webServers.xml
