@@ -4,6 +4,8 @@ logs/*
 /app/dist/
 /app/build/
 /app/keys/
+.idea/
+.vscode/
 
 # Ignore Python cache files
 __pycache__/
