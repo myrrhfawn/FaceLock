@@ -68,11 +68,12 @@ SERVER_PORT = 9001
 RES = (854, 480)
 PYRO_SERIALIZER = "pickle"
 
-# INPUT_SOURCE = "web"
-# INPUT_DEVICE = "/dev/video0"
-INPUT_SOURCE = "file"
-INPUT_DEVICE = "/data/my_projects/FaceLock/app/detector/faces/biden.mp4"
-# INPUT_DEVICE = "/data/my_projects/FaceLock/app/detector/faces/trump.mp4"
+if DEBUG:
+    INPUT_SOURCE = "file"
+    INPUT_DEVICE = "/data/my_projects/FaceLock/app/detector/faces/biden.mp4"
+else:
+    INPUT_SOURCE = "web"
+    INPUT_DEVICE = "/dev/video0"
 
 MAX_FPS = 60
 
