@@ -61,7 +61,7 @@ IMAGE_FOLDER_PATH = "/data/FaceLock/app/detector/faces"
 
 # Client
 SERVER_HOST = "127.0.0.1"
-SERVER_PORT = 9000
+SERVER_PORT = 9001
 
 # Process resolution
 RES = (854, 480)
@@ -70,6 +70,10 @@ PYRO_SERIALIZER = "pickle"
 # INPUT_SOURCE = "web"
 # INPUT_DEVICE = "/dev/video0"
 INPUT_SOURCE = "file"
-INPUT_DEVICE = "/data/my_projects/FaceLock/app/detector/biden.mp4"
+# INPUT_DEVICE = "/data/my_projects/FaceLock/app/detector/biden.mp4"
+INPUT_DEVICE = "/data/my_projects/FaceLock/app/detector/trump.mp4"
 
 MAX_FPS = 60
+
+# RsaCryptoProvider
+KEY_STORAGE_PATH = "keys"

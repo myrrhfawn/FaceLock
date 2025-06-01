@@ -32,21 +32,25 @@ class VideoStreamWorker(QtCore.QObject):
     def run(self):
         logger.info("Video stream thread started")
         unknown_det_time = time.time()
-        while self.running:
-            try:
-                if self.video_stream.is_frame_ready():
-                    frame = self.video_stream.get_frame(detection=True)
+        self.start_pipeline()
+        try:
+            while self.running:
+                try:
+                    if self.video_stream.is_frame_ready():
+                        frame = self.video_stream.get_frame(detection=True)
 
-                    self.frame_ready.emit(frame)
-                    self.current_frame = frame
+                        self.frame_ready.emit(frame)
+                        self.current_frame = frame
 
-                    if (time.time() - unknown_det_time) > REGISTER_BUTTON_TIMEOUT:
-                        unknown_det_time = time.time()
-                    time.sleep(1 / MAX_FPS)
-            except Pyro4.errors.CommunicationError as e:
-                logger.warning("Video stream thread error: {}".format(e))
-                time.sleep(1)
-        logger.info("Video stream thread stopped")
+                        if (time.time() - unknown_det_time) > REGISTER_BUTTON_TIMEOUT:
+                            unknown_det_time = time.time()
+                        time.sleep(1 / MAX_FPS)
+                except Pyro4.errors.CommunicationError as e:
+                    logger.warning("Video stream thread error: {}".format(e))
+                    time.sleep(1)
+            logger.info("Video stream thread stopped")
+        finally:
+            self.stop_pipeline()
 
     def get_frame(self, detection: bool = False):
         """
@@ -55,10 +59,23 @@ class VideoStreamWorker(QtCore.QObject):
         """
         return self.current_frame
 
+    def start_pipeline(self):
+        """
+        Starts the video stream pipeline.
+        """
+        self.video_stream.set_state("PLAYING")
+
+    def stop_pipeline(self):
+        """
+        Stops the video stream pipeline.
+        """
+        self.video_stream.set_state("PAUSED")
+
     def start(self):
         self.thread.start()
         self.running = True
 
     def stop(self):
         self.running = False
+        self.video_stream.set_state("PAUSED")
         self.thread.stop()

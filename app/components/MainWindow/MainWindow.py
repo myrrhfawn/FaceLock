@@ -1,5 +1,7 @@
 import queue
 import cv2
+from collections import deque
+import time
 from PyQt5 import QtCore, QtGui, QtWidgets
 from app.components.MainWindow.MainWindowUI import Ui_MainWindow
 from app.components.RegisterDialog.RegisterDialog import RegisterDialog
@@ -24,6 +26,33 @@ def round_corners(widget, radius=34):
     widget.setMask(region)
 
 
+
+class UnknownDetectionBuffer:
+    def __init__(self, time_window_sec=3, count_threshold=15):
+        self.detections = deque()
+        self.time_window = time_window_sec
+        self.threshold = count_threshold
+
+    def add_detection(self):
+        now = time.time()
+        self.detections.append(now)
+        self._cleanup_old(now)
+
+    def _cleanup_old(self, now):
+        while self.detections and now - self.detections[0] > self.time_window:
+            self.detections.popleft()
+
+    def should_enable_signup(self):
+        """Return True if enough recent unknown detections occurred."""
+        now = time.time()
+        self._cleanup_old(now)
+        return len(self.detections) >= self.threshold
+
+    def reset(self):
+        """Clear all detections (e.g., after user signs up)."""
+        self.detections.clear()
+
+
 class FaceLockApp(QtWidgets.QMainWindow):
     def __init__(self, filepath: str = None):
         super(FaceLockApp, self).__init__()
@@ -37,8 +66,10 @@ class FaceLockApp(QtWidgets.QMainWindow):
         self.ui.signinButton.hide()
         self.ui.signupButton.clicked.connect(self.register_user)
         self.user_last_det = None
+        self.unknown_detection_buffer = UnknownDetectionBuffer()
 
         self.stream = VideoStreamWorker()
+        self.stream.video_stream.set_reload_true()
         self.stream.frame_ready.connect(self.update_image)
 
     def change_label_text(self, text):
@@ -68,6 +99,7 @@ class FaceLockApp(QtWidgets.QMainWindow):
             encoding = encoding[0]
         if len(encoding) == 0:
             self.ui.debug_label.setText("No face detected. Try Again")
+            logger.info("No face detected. Try Again")
             return
 
         registerDialog = RegisterDialog(mainWindow=self, encoding=encoding)
@@ -82,11 +114,15 @@ class FaceLockApp(QtWidgets.QMainWindow):
         self.ui.videoLabel.setPixmap(qt_img)
 
         if frame.detection == UNKNOWN_TITLE:
-            pass
+            self.unknown_detection_buffer.add_detection()
+            if self.unknown_detection_buffer.should_enable_signup():
+                self.ui.signinButton.hide()
+                self.user_last_det = None
         else:
             logger.info(f"Detected user: {frame.detection}")
             self.user_last_det = frame.detection
             self.ui.signinButton.show()
+            self.unknown_detection_buffer.reset()
 
         if self.ui.signinButton.isHidden():
             self.ui.signupButton.show()
@@ -109,3 +145,14 @@ class FaceLockApp(QtWidgets.QMainWindow):
         self.thread.wait()
         self.video_stream.stop()
         super().closeEvent(event)
+
+    def hide(self):
+        """
+        Hides the main window.
+        """
+        self.stream.stop_pipeline()
+        super().hide()
+
+    def show(self):
+        self.stream.start_pipeline()
+        super().show()

@@ -16,10 +16,7 @@ class TestFaceLockServer(unittest.TestCase):
         )
 
         # Act
-        response = client.send_message(message.get_action())
-        self.assertDictEqual(response, return_value)
-
-        response = client.send_message(message.get_data())
+        response = client.send_message(message)
         self.assertDictEqual(response, return_value)
 
 

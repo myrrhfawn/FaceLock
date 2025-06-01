@@ -57,7 +57,12 @@ class DataBase:
             session.add(user)
             session.commit()
             logger.info(f"Added user with username: {username}")
-
+            return {
+                "user_id": user.id,
+                "username": user.username,
+                "encode_data": user.encode_data,
+                "public_key": user.public_key,
+            }
         except Exception as e:
             session.rollback()
             logger.exception(e)
@@ -101,6 +106,7 @@ class DataBase:
             user = session.query(User).filter_by(username=username).first()
             if user:
                 return {
+                    "user_id": user.id,
                     "username": user.username,
                     "encode_data": user.encode_data,
                     "public_key": user.public_key,

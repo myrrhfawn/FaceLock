@@ -62,11 +62,19 @@ class FaceDetectionPipeline(GStreamerPipeline):
         ret_frame.img = ret_frame.img
         return ret_frame
 
-    def startPrev(self):
+    def set_state(self, state: str):
         """
-        Starts the feed from gstream pipe.
+        Starts the feed from gstreamer pipeline.
         """
-        self.player.set_state(Gst.State.PLAYING)
+        if state == "PLAYING":
+            self.player.set_state(Gst.State.PLAYING)
+        elif state == "PAUSED":
+            self.player.set_state(Gst.State.PAUSED)
+        elif state == "NULL":
+            self.player.set_state(Gst.State.PAUSED)
+        else:
+            logger.error(f"Unknown state: {state}. Use PLAYING, PAUSED or NULL.")
+            return False
 
 
 if __name__ == "__main__":

@@ -18,5 +18,5 @@ with ThreadingTCPServer((SERVER_HOST, SERVER_PORT), TCPHandler) as server:
         t.start()
     logger.info(f"Started Threads:{NUMBER_OF_THREADS}")
 
-    logger.info(f"Waiting for connections on 127.0.0.1:{9000}...")
+    logger.info(f"Waiting for connections on {SERVER_HOST}:{SERVER_PORT}...")
     server.serve_forever()

@@ -7,11 +7,11 @@ services:
     image: tcpserver
     container_name: "tcp_server"
     expose:
-      - "9000"
+      - "9001"
     volumes:
       - "/data/my_projects/FaceLock/server:/app"
     ports:
-      - "9000:9000"
+      - "9001:9001"
     restart: "always"
     depends_on:
       - db

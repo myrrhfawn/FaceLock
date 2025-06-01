@@ -33,7 +33,7 @@ class ActionProcessor:
 
     def register_user(self, data):
         logger.info("Start register user...")
-        self.database.register_user(**data)
+        return self.database.register_user(**data)
 
     def get_encodings(self, data=None):
         logger.info("Start fetching data from DB...")
@@ -41,6 +41,7 @@ class ActionProcessor:
 
     def get_user(self, data):
         logger.info("Start fetching user from DB...")
+        print("Data received for user fetch:", data)
         username = data.get("username")
         if not username:
             logger.error("Username is required to fetch user data.")

@@ -1,10 +1,10 @@
 import socket
-import face_recognition
 import pickle
 
 import logging
-import numpy as np
 import sys
+import time
+
 from app.constants import SERVER_HOST, SERVER_PORT
 
 logger = logging.getLogger(__name__)
@@ -16,23 +16,44 @@ class FaceLockClient:
         self.client.connect((SERVER_HOST, SERVER_PORT))
 
     def send_message(self, message):
-        message = pickle.dumps(message)
-        self.client.send(message)
-        response = self.client.recv(8192)
-        if response:
-            response = pickle.loads(response)
-            if response["status"] == 200:
+        # Send action
+        action = message.get_action()
+        logger.info(f"Sending action to server: {action['type']}")
+        response = self._send(action)
+        if action["size"] > 38:
+            # If size is greater than 38, we expect data to follow
+            if response["status"] != 200:
+                logger.error(f"Failed to send action: {action}")
                 return response
-            else:
-                return response
+            data = message.get_data()
+            logger.info("Sending data to server")
+            return self._send(data)
+        return response
+
+    def _send(self, data):
+        """ Sends data to the server. """
+        data = pickle.dumps(data)
+        self.client.send(data)
+        data = self.client.recv(8192)
+        print("Data received in send:", data)
+
+        return pickle.loads(data)
 
     def get_data(self, response):
         buffer_size = response["size"] if response.get("size") else 8192
+        logger.info(f"Receiving data from server with buffer size: {buffer_size}")
         data = self.client.recv(buffer_size)
-        return pickle.loads(data)
+
+        if not data:
+            logger.error("No data received from server.")
+            return None
+        print("Data received from server:", data)
+        data = pickle.loads(data)
+        data['status'] = response.get("status", 500)
+        return data
 
     def __del__(self):
-        self.client.close
+        self.client.close()
 
 
 class Message:

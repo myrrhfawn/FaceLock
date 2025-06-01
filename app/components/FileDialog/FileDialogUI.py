@@ -92,6 +92,12 @@ class Ui_File(object):
         self.filenameLabel.setStyleSheet("color: white;\n" "")
         self.filenameLabel.setText("")
         self.filenameLabel.setObjectName("filenameLabel")
+
+        self.debug_label = QtWidgets.QLabel(File)
+        self.debug_label.setGeometry(QtCore.QRect(0, 0, 600, 30))
+        self.debug_label.setObjectName("debug_label")
+        self.debug_label.setStyleSheet("background-color: none; color: red;")
+
         self.horizontalLayout_2.addWidget(self.filenameLabel)
         self.verticalLayout_3.addLayout(self.horizontalLayout_2)
         self.horizontalLayout_5 = QtWidgets.QHBoxLayout()

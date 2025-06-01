@@ -94,7 +94,7 @@ class Ui_Register(object):
             "}"
         )
         self.debug_label = QtWidgets.QLabel(Register)
-        self.debug_label.setGeometry(QtCore.QRect(0, 0, 200, 30))
+        self.debug_label.setGeometry(QtCore.QRect(0, 0, 600, 30))
         self.debug_label.setObjectName("debug_label")
         self.debug_label.setStyleSheet("background-color: none; color: red;")
 

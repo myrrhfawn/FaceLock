@@ -167,7 +167,7 @@ class GStreamerPipeline(Thread):
         bus.connect("message", self.__on_message)
         bus.connect("sync-message::element", self.__on_sync_message)
 
-        self.player.set_state(Gst.State.PLAYING)
+        # self.player.set_state(Gst.State.PLAYING)
 
         # use this to render a dot file and then a nice graph of the pipeline
         # see https://developer.ridgerun.com/wiki/index.php/How_to_generate_a_GStreamer_pipeline_diagram

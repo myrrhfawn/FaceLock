@@ -30,7 +30,6 @@ class SimpleFaceRec(Thread):
     def update_detection(self, frame):
         if self.reload_faces:
             self.load_faces_from_database()
-            logger.info("Faces have been updated")
         image = prepare_image(frame.img)
         self.last_location = self.get_face_location(image)
         self.last_detection = self.get_detections(image, self.last_location)
@@ -117,7 +116,7 @@ class SimpleFaceRec(Thread):
             client = FaceLockClient()
             logger.info("Getting encodings from DB...")
             message = GetEncodingsMessage()
-            response = client.send_message(message.get_action())
+            response = client.send_message(message)
             logger.info(f"server response: {response}")
             if response and response["status"] == 200:
                 users = client.get_data(response)
@@ -136,6 +135,7 @@ class SimpleFaceRec(Thread):
             logger.error(f"Error fetching data. {e}")
             self.reload_faces = True
             return
+        logger.info("Faces have been updated")
         self.reload_faces = False
 
     @staticmethod

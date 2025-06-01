@@ -2,6 +2,8 @@ import time
 
 from PyQt5 import QtWidgets, QtCore
 from logging import getLogger
+
+from app.common.User import User
 from app.components.RegisterDialog.RegisterDialogUI import Ui_Register
 from app.client import FaceLockClient, RegisterUserMessage
 from app.crypto.rsa_crypto_provider import RsaCryptoProvider
@@ -21,6 +23,7 @@ class RegisterDialog(QtWidgets.QDialog):
         self.ui.cancelButton.clicked.connect(self.cancel_button_click)
         self.ui.registerButton.clicked.connect(self.register_button_click)
         self.rsa_provider = RsaCryptoProvider()
+        self.user = None
 
     @QtCore.pyqtSlot()
     def cancel_button_click(self):
@@ -31,28 +34,32 @@ class RegisterDialog(QtWidgets.QDialog):
     def register_button_click(self):
         client = FaceLockClient()
         public_key, private_key = self.rsa_provider.generate_key_pair()
-        # TODO: Strore private key securely
-        logger.info("Encodings: {}".format(self.encoding))
         message = RegisterUserMessage(
             username=self.ui.emailInput.text(),
             password=self.ui.emailInput.text(),
             encode_data=self.encoding,
             public_key=public_key,
         )
-        response = client.send_message(message.get_action())
-        if response["status"] != 200:
-            self.ui.debug_label.setStyleSheet("color: red;")
-            self.ui.debug_label.setText("Failed to register user. Try again")
-            return
-        response = client.send_message(message.get_data())
+        response = client.send_message(message)
+        user_data = client.get_data(response)
+
+        self.user = User(**user_data)
+        self.user.store_private_key(private_key)
+
         self.ui.debug_label.setText("Register success")
         if response and response["status"] == 200:
-            self.ui.debug_label.setText("Register success")
-            time.sleep(1)
-            # TODO: RELOAD VIDEO STREAM
-            # self.mainWindow.ui.debug_label.setText("Register successfully.")
+            self.mainWindow.ui.debug_label.setText("Register successfully.")
             self.mainWindow.stream.video_stream.set_reload_true()
             self.mainWindow.show()
             self.close()
         else:
             self.ui.debug_label.setText("Failed to register user. Try again")
+
+
+def store_private_key(private_key, user):
+    """
+    Store the private key securely.
+    This is a placeholder function. Implement secure storage as needed.
+    """
+    with open("private_key.pem", "wb") as f:
+        f.write(private_key)
