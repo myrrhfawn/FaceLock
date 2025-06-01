@@ -1,12 +1,11 @@
-import time
-
-from PyQt5 import QtWidgets, QtCore
 from logging import getLogger
 
-from app.common.User import User
-from app.components.RegisterDialog.RegisterDialogUI import Ui_Register
-from app.client import FaceLockClient, RegisterUserMessage
-from app.crypto.rsa_crypto_provider import RsaCryptoProvider
+from common.client import FaceLockClient, RegisterUserMessage
+from common.constants import DEBUG
+from common.user import User
+from components.RegisterDialog.RegisterDialogUI import Ui_Register
+from crypto.rsa_crypto_provider import RsaCryptoProvider
+from PyQt5 import QtCore, QtWidgets
 
 logger = getLogger(__name__)
 
@@ -27,16 +26,18 @@ class RegisterDialog(QtWidgets.QDialog):
 
     @QtCore.pyqtSlot()
     def cancel_button_click(self):
+        """Handle cancel button click."""
         self.mainWindow.show()
         self.close()
 
     @QtCore.pyqtSlot()
     def register_button_click(self):
+        """Handle register button click."""
         client = FaceLockClient()
         public_key, private_key = self.rsa_provider.generate_key_pair()
         message = RegisterUserMessage(
             username=self.ui.emailInput.text(),
-            password=self.ui.emailInput.text(),
+            password=self.ui.passInput.text(),
             encode_data=self.encoding,
             public_key=public_key,
         )
@@ -45,8 +46,8 @@ class RegisterDialog(QtWidgets.QDialog):
 
         self.user = User(**user_data)
         self.user.store_private_key(private_key)
-
-        self.ui.debug_label.setText("Register success")
+        if DEBUG:
+            self.ui.debug_label.setText("Register success")
         if response and response["status"] == 200:
             self.mainWindow.ui.debug_label.setText("Register successfully.")
             self.mainWindow.stream.video_stream.set_reload_true()

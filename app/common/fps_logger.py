@@ -1,6 +1,6 @@
-import time
-import threading
 import logging
+import threading
+import time
 
 logger = logging.getLogger(__name__)
 
@@ -15,6 +15,7 @@ class FPSCounter(threading.Thread):
         self.start()
 
     def run(self):
+        """Continuously calculate and log the FPS."""
         self.running = True
         while self.running:
             start_time = time.time()
@@ -26,6 +27,7 @@ class FPSCounter(threading.Thread):
             logger.info(f"Pipeline working with {fps:.2f} fps")
 
     def increment(self):
+        """Increment the frame count in a thread-safe manner."""
         with self.lock:
             self.frame_count += 1
 
@@ -36,6 +38,7 @@ class FPSCounter(threading.Thread):
         return count
 
     def stop(self):
+        """Stop the FPS counter thread."""
         self.running = False
 
 

@@ -4,3 +4,4 @@ logs/*
 *.db
 /app/dist/
 /app/build/
+/app/keys/

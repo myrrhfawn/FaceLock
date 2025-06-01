@@ -1,15 +1,14 @@
-import os
+import threading
+from logging import getLogger
+from threading import Thread
 
 import cv2
 import face_recognition
 import numpy as np
-import threading
-from threading import Thread
-from logging import getLogger
-from app.common.frame import Frame
-from app.constants import UNKNOWN_TITLE, IMAGE_FOLDER_PATH
-from app.client import FaceLockClient, GetEncodingsMessage
-from app.common.tools import prepare_image
+from common.client import FaceLockClient, GetEncodingsMessage
+from common.constants import UNKNOWN_TITLE
+from common.frame import Frame
+from common.tools import prepare_image
 
 logger = getLogger(__name__)
 
@@ -28,6 +27,7 @@ class SimpleFaceRec(Thread):
         self.reload_faces = False
 
     def update_detection(self, frame):
+        """Update the face detection for the given frame."""
         if self.reload_faces:
             self.load_faces_from_database()
         image = prepare_image(frame.img)
@@ -36,12 +36,15 @@ class SimpleFaceRec(Thread):
         # self.last_landmark = self.get_face_landmark(image)
 
     def get_face_location(self, image):
+        """Get the face locations in the image."""
         return face_recognition.face_locations(image)
 
     def get_face_landmark(self, image):
+        """Get the face landmarks in the image."""
         return face_recognition.face_landmarks(image)
 
     def get_detections(self, image: np.array, locations):
+        """Get the face detections in the image."""
         encodings = face_recognition.face_encodings(image, locations)
         face_names = []
         # logger.info(f"enc: {encodings}")
@@ -75,6 +78,7 @@ class SimpleFaceRec(Thread):
         return face_names
 
     def get_image_with_detection(self, frame: Frame, draw: bool = False) -> Frame:
+        """Get the image with face detection drawn on it."""
         if draw and len(self.last_location) > 0:
             # logger.info(f"last loc: {self.last_location}")
             # logger.info(f"last det: {self.last_detection}")
@@ -94,24 +98,18 @@ class SimpleFaceRec(Thread):
         return frame
 
     def stop(self):
+        """Stop the face detection thread."""
         self.stop_detector.set()
 
     def run(self):
+        """Main loop for the face detection thread."""
         while not self.stop_detector.is_set():
             if not self.input_queue.empty():
                 frame = self.input_queue.get()
                 self.update_detection(frame)
 
-    def load_faces_from_folder(self):
-        for image_name in os.listdir(IMAGE_FOLDER_PATH):
-            image_path = os.path.join(IMAGE_FOLDER_PATH, image_name)
-            img = cv2.imread(image_path)
-            img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
-            encoding = face_recognition.face_encodings(img)
-            if len(encoding) > 0:
-                self.encoded_faces[image_name.split(".")[0]] = encoding[0]
-
     def load_faces_from_database(self):
+        """Load face encodings from the database."""
         try:
             client = FaceLockClient()
             logger.info("Getting encodings from DB...")
@@ -140,6 +138,7 @@ class SimpleFaceRec(Thread):
 
     @staticmethod
     def get_user_from_detection(detections):
+        """Get the user from the face detection."""
         user = UNKNOWN_TITLE
         for det in detections:
             if detections == user:

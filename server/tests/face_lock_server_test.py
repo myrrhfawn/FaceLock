@@ -1,8 +1,7 @@
 import unittest
-import pickle
+
 import face_recognition
-from unittest.mock import patch
-from client import FaceLockClient, RegisterUserMessage, SERVER_HOST, SERVER_PORT
+from client import FaceLockClient, RegisterUserMessage
 
 
 class TestFaceLockServer(unittest.TestCase):

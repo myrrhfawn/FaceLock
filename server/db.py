@@ -2,10 +2,9 @@ import logging
 from datetime import datetime
 from urllib.parse import quote
 
-from sqlalchemy import Column, DateTime, Integer, String, LargeBinary, create_engine
-from sqlalchemy.orm import declarative_base
-from sqlalchemy.orm import sessionmaker
-from constants import DB_NAME, DB_USER, DB_HOST, DB_PORT, DB_PASSWORD
+from constants import DB_HOST, DB_NAME, DB_PASSWORD, DB_PORT, DB_USER
+from sqlalchemy import Column, DateTime, Integer, LargeBinary, String, create_engine
+from sqlalchemy.orm import declarative_base, sessionmaker
 
 Base = declarative_base()
 
@@ -50,10 +49,16 @@ class DataBase:
         self.Session = sessionmaker(bind=self.engine)
 
     def register_user(self, username, password, public_key, encode_data=None):
+        """Registers a new user in the database."""
         session = self.Session()
         try:
             logger.info("Adding new user into DB.")
-            user = User(username=username, password=password, encode_data=encode_data, public_key=public_key)
+            user = User(
+                username=username,
+                password=password,
+                encode_data=encode_data,
+                public_key=public_key,
+            )
             session.add(user)
             session.commit()
             logger.info(f"Added user with username: {username}")
@@ -86,6 +91,7 @@ class DataBase:
             return False
 
     def get_all_encode_data(self):
+        """Fetches all user encodings from the database."""
         session = self.Session()
         try:
             users = session.query(User.username, User.encode_data).all()
@@ -95,12 +101,13 @@ class DataBase:
             ]
             return data_list
         except Exception as e:
-            print(f"Error occurred: {e}")
+            logger.error(f"Error occurred: {e}")
             return None
         finally:
             session.close()
 
     def get_user_by_username(self, username):
+        """Fetches user data by username from the database."""
         session = self.Session()
         try:
             user = session.query(User).filter_by(username=username).first()
@@ -119,6 +126,7 @@ class DataBase:
             return None
         finally:
             session.close()
+
 
 if __name__ == "__main__":
     database = DataBase()

@@ -1,18 +1,19 @@
 #!/usr/bin/env python
 import os
-import cv2
-import numpy as np
-import gi
 import queue
-from threading import Thread, Event
+from threading import Event, Thread
 
-from app.common.fps_logger import FPSCounter
+import cv2
+import gi
+import numpy as np
+from common.fps_logger import FPSCounter
 
 gi.require_version("Gst", "1.0")
-from gi.repository import GLib, Gst
 from logging import getLogger
-from app.constants import MIN_DETECTION_FPS, RES, INPUT_SOURCE, INPUT_DEVICE
-from app.common.frame import Frame
+
+from common.constants import INPUT_DEVICE, INPUT_SOURCE, MIN_DETECTION_FPS, RES
+from common.frame import Frame
+from gi.repository import GLib, Gst
 
 logger = getLogger(__name__)
 
@@ -42,6 +43,7 @@ class GStreamerPipeline(Thread):
         logger.info("GStreamer pipeline initialized")
 
     def build_file_pipeline(self):
+        """Builds GStreamer pipeline for file input."""
         self.source = Gst.ElementFactory.make("uridecodebin", "source")
         if not os.path.exists(INPUT_DEVICE):
             raise RuntimeError("Input file does not exist")
@@ -57,6 +59,7 @@ class GStreamerPipeline(Thread):
         self.__link_many([self.conv, self.appsink])
 
     def build_webcam_pipeline(self):
+        """Builds GStreamer pipeline for webcam input."""
         self.source = Gst.ElementFactory.make("v4l2src", "vsource")
         self.source.set_property("device", INPUT_DEVICE)
 

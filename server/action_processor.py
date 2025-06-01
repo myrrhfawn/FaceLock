@@ -1,6 +1,6 @@
-from db import DataBase
 from logging import getLogger
-import pickle
+
+from db import DataBase
 
 logger = getLogger(__name__)
 
@@ -15,6 +15,7 @@ class ActionProcessor:
         }
 
     def process(self, action, data=None):
+        """Process the action based on its type and data."""
         action_type = action["type"]
         action = self.get_callback(action_type)
         if action:
@@ -25,6 +26,7 @@ class ActionProcessor:
         return None
 
     def get_callback(self, action_type):
+        """Get the callback function for the given action type."""
         if action_type in self.actions:
             return self.actions[action_type]
         else:
@@ -32,16 +34,18 @@ class ActionProcessor:
             return None
 
     def register_user(self, data):
+        """Register a new user in the database."""
         logger.info("Start register user...")
         return self.database.register_user(**data)
 
     def get_encodings(self, data=None):
+        """Fetch all user encodings from the database."""
         logger.info("Start fetching data from DB...")
         return {"users": self.database.get_all_encode_data()}
 
     def get_user(self, data):
+        """Fetch user data by username from the database."""
         logger.info("Start fetching user from DB...")
-        print("Data received for user fetch:", data)
         username = data.get("username")
         if not username:
             logger.error("Username is required to fetch user data.")

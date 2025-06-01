@@ -1,30 +1,30 @@
 import queue
-import cv2
-from collections import deque
 import time
-from PyQt5 import QtCore, QtGui, QtWidgets
-from app.components.MainWindow.MainWindowUI import Ui_MainWindow
-from app.components.RegisterDialog.RegisterDialog import RegisterDialog
-from app.components.FileDialog.FileDialog import FileDialog
-from app.components.video_stream.VideoStreamWorker import VideoStreamWorker
-from app.common.base_logging import setup_logging
+from collections import deque
 from logging import getLogger
-from app.common.frame import Frame
-from app.constants import UNKNOWN_TITLE
 
-from app.common.tools import prepare_image
+import cv2
+from common.base_logging import setup_logging
+from common.constants import UNKNOWN_TITLE
+from common.frame import Frame
+from common.tools import prepare_image
+from components.FileDialog.FileDialog import FileDialog
+from components.MainWindow.MainWindowUI import Ui_MainWindow
+from components.RegisterDialog.RegisterDialog import RegisterDialog
+from components.video_stream.VideoStreamWorker import VideoStreamWorker
+from PyQt5 import QtCore, QtGui, QtWidgets
 
 setup_logging(file_name="app.log")
 logger = getLogger(__name__)
 
 
 def round_corners(widget, radius=34):
+    """Apply rounded corners to a widget."""
     path = QtGui.QPainterPath()
     rect = QtCore.QRectF(widget.rect())  # <-- виправлено тут
     path.addRoundedRect(rect, radius, radius)
     region = QtGui.QRegion(path.toFillPolygon().toPolygon())
     widget.setMask(region)
-
 
 
 class UnknownDetectionBuffer:
@@ -34,11 +34,13 @@ class UnknownDetectionBuffer:
         self.threshold = count_threshold
 
     def add_detection(self):
+        """Add a new detection timestamp."""
         now = time.time()
         self.detections.append(now)
         self._cleanup_old(now)
 
     def _cleanup_old(self, now):
+        """Remove old detections that are outside the time window."""
         while self.detections and now - self.detections[0] > self.time_window:
             self.detections.popleft()
 
@@ -69,20 +71,18 @@ class FaceLockApp(QtWidgets.QMainWindow):
         self.unknown_detection_buffer = UnknownDetectionBuffer()
 
         self.stream = VideoStreamWorker()
-        self.stream.video_stream.set_reload_true()
+        self.stream.set_reload_true()
         self.stream.frame_ready.connect(self.update_image)
-
-    def change_label_text(self, text):
-        pass
 
     @QtCore.pyqtSlot()
     def sign_in(self):
+        """Handle user sign-in."""
         logger.info("Sign in...")
         if self.user_last_det is not None:
+            self.hide()
             fileWindow = FileDialog(
                 mainWindow=self, filepath=self.filepath, user_name=self.user_last_det
             )
-            self.hide()
             fileWindow.show()
             fileWindow.exec()
         else:
@@ -90,6 +90,7 @@ class FaceLockApp(QtWidgets.QMainWindow):
 
     @QtCore.pyqtSlot()
     def register_user(self):
+        """Handle user registration."""
         logger.info("Register user...")
         frame = Frame()
         while frame.detection != UNKNOWN_TITLE:
@@ -109,6 +110,7 @@ class FaceLockApp(QtWidgets.QMainWindow):
 
     @QtCore.pyqtSlot(Frame)
     def update_image(self, frame: Frame):
+        """Update the displayed image in the UI."""
         qt_img = self.convert_cv_qt(frame.img)
         round_corners(self.ui.videoLabel)
         self.ui.videoLabel.setPixmap(qt_img)
@@ -130,6 +132,7 @@ class FaceLockApp(QtWidgets.QMainWindow):
             self.ui.signupButton.hide()
 
     def convert_cv_qt(self, cv_img):
+        """Convert OpenCV image to QPixmap for display in the UI."""
         rgb_image = cv2.cvtColor(cv_img, cv2.COLOR_BGR2RGB)
         h, w, ch = rgb_image.shape
         bytes_per_line = ch * w
@@ -140,6 +143,7 @@ class FaceLockApp(QtWidgets.QMainWindow):
         return QtGui.QPixmap.fromImage(p)
 
     def closeEvent(self, event):
+        """""" ""
         self.stream.stop()
         self.thread.quit()
         self.thread.wait()
@@ -154,5 +158,6 @@ class FaceLockApp(QtWidgets.QMainWindow):
         super().hide()
 
     def show(self):
+        """Shows the main window and starts the video stream pipeline."""
         self.stream.start_pipeline()
         super().show()

@@ -1,9 +1,8 @@
 import os
 
-from PyQt5.uic import loadUi
-from onnxruntime.transformers.shape_infer_helper import file_path, logger
+from common.constants import KEY_STORAGE_PATH
+from onnxruntime.transformers.shape_infer_helper import logger
 
-from app.constants import KEY_STORAGE_PATH
 
 class User:
     def __init__(self, user_id, username, encode_data, public_key, **kwargs):
@@ -13,6 +12,7 @@ class User:
         self.public_key: bytes = public_key
 
     def to_dict(self):
+        """"""
         return {
             "user_id": self.user_id,
             "username": self.username,
@@ -32,7 +32,9 @@ class User:
         keys_folder = os.path.join(os.getcwd(), KEY_STORAGE_PATH)
         if not os.path.exists(keys_folder):
             os.makedirs(keys_folder)
-        return os.path.join(keys_folder, f"{self.username}_id_{self.user_id}_private_key.pem")
+        return os.path.join(
+            keys_folder, f"{self.username}_id_{self.user_id}_private_key.pem"
+        )
 
     def store_private_key(self, private_key: bytes):
         """
@@ -51,7 +53,9 @@ class User:
         """
         file_path = self.get_private_key_path()
         if not os.path.exists(file_path):
-            logger.info(f"Private key file does not exist at {file_path}. Returning None.")
+            logger.info(
+                f"Private key file does not exist at {file_path}. Returning None."
+            )
             return None
         try:
             with open(file_path, "rb") as f:

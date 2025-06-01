@@ -8,8 +8,6 @@ services:
     container_name: "tcp_server"
     expose:
       - "9001"
-    volumes:
-      - "/data/my_projects/FaceLock/server:/app"
     ports:
       - "9001:9001"
     restart: "always"

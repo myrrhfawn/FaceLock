@@ -1,13 +1,12 @@
-import sys
 import pickle
+import sys
 import time
+from io import BytesIO
+from logging import getLogger
 from socketserver import StreamRequestHandler
 
-
 from action_processor import ActionProcessor
-from io import BytesIO
 from constants import DEFAULT_BUFFER_SIZE, HANDLER_TIMEOUT, StatusCode
-from logging import getLogger
 
 logger = getLogger(__name__)
 
@@ -19,6 +18,7 @@ class TCPHandler(StreamRequestHandler):
         super().__init__(*args, **kwargs)
 
     def handle(self):
+        """Handle incoming requests from the client."""
         try:
             buffer = BytesIO()
             ip_address = self.client_address[0]
@@ -52,12 +52,14 @@ class TCPHandler(StreamRequestHandler):
         # sys.exit(0)
 
     def pre_process_post_action(self, action: dict):
+        """Process POST action and receive data from client."""
         buffer_size = action["size"] if action.get("size") else DEFAULT_BUFFER_SIZE
         data = self.request.recv(buffer_size)
         data = pickle.loads(data)
         return self.action_processor.process(action, data)
 
     def pre_process_get_action(self, action: dict):
+        """Process GET action and receive data from client."""
         data = None
         logger.info(f"Processing GET action: {action}")
         if action.get("size", DEFAULT_BUFFER_SIZE) > 38:
@@ -69,20 +71,25 @@ class TCPHandler(StreamRequestHandler):
         return self.action_processor.process(action, data)
 
     def send_success_message(self):
+        """Send a success message to the client."""
         self.request.send(
             pickle.dumps({"status": StatusCode.SUCCESS.value, "message": "SUCCESS"})
         )
 
     def send_error(self, message: str):
+        """Send an error message to the client."""
         self.request.send(pickle.dumps({"status": 500, "message": message}))
 
     def send_data_to_client(self, response: dict = None):
+        """Send data to the client."""
         response = pickle.dumps(response)
         size = sys.getsizeof(response)
         logger.info(f"Sending response of size: {size} bytes")
         self.request.send(
             pickle.dumps({"status": StatusCode.SUCCESS.value, "size": size})
         )
-        time.sleep(0.1)  # Simulate some processing delay, if remove send data will be merged into one packet
+        time.sleep(
+            0.1
+        )  # Simulate some processing delay, if remove send data will be merged into one packet
         if response:
             self.request.send(response)

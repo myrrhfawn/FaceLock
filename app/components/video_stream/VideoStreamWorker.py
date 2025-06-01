@@ -1,17 +1,32 @@
 import time
-from PyQt5 import QtCore
-from app.common.base_logging import setup_logging
 from logging import getLogger
-from app.common.frame import Frame
-from app.constants import REGISTER_BUTTON_TIMEOUT, PYRO_SERIALIZER, MAX_FPS
+
 import Pyro4
+from common.constants import MAX_FPS, PYRO_SERIALIZER, REGISTER_BUTTON_TIMEOUT
+from common.frame import Frame
+from PyQt5 import QtCore
 
 Pyro4.config.SERIALIZER = PYRO_SERIALIZER
 Pyro4.config.SERIALIZERS_ACCEPTED.add(PYRO_SERIALIZER)
 
-setup_logging(file_name="app.log")
 logger = getLogger(__name__)
 PYRO_OBJECT_URI = "PYRO:FaceDetectionPipeline@localhost:9090"
+
+
+def pyro_connected(func):
+    """
+    Decorator to check if Pyro connection is established before executing the function.
+    If not connected, it logs an error and returns None.
+    """
+
+    def wrapper(*args, **kwargs):
+        try:
+            return func(*args, **kwargs)
+        except Pyro4.errors.CommunicationError as e:
+            logger.error(f"Pyro communication error: {e}")
+            return None
+
+    return wrapper
 
 
 class VideoStreamWorker(QtCore.QObject):
@@ -30,12 +45,19 @@ class VideoStreamWorker(QtCore.QObject):
 
     @QtCore.pyqtSlot()
     def run(self):
+        """Main loop for the video stream worker thread."""
         logger.info("Video stream thread started")
         unknown_det_time = time.time()
-        self.start_pipeline()
         try:
-            while self.running:
+            while True:
+                if not self.running:
+                    time.sleep(1)
+                    logger.info("Video stream thread is not running, sleeping...")
+                    continue
                 try:
+                    if not self.video_stream.is_playing():
+                        self.video_stream.set_state("PLAYING")
+                        logger.info("Video stream set to PLAYING state")
                     if self.video_stream.is_frame_ready():
                         frame = self.video_stream.get_frame(detection=True)
 
@@ -59,23 +81,37 @@ class VideoStreamWorker(QtCore.QObject):
         """
         return self.current_frame
 
+    @pyro_connected
     def start_pipeline(self):
         """
         Starts the video stream pipeline.
         """
+        self.running = True
         self.video_stream.set_state("PLAYING")
 
+    @pyro_connected
     def stop_pipeline(self):
         """
         Stops the video stream pipeline.
         """
-        self.video_stream.set_state("PAUSED")
-
-    def start(self):
-        self.thread.start()
-        self.running = True
-
-    def stop(self):
         self.running = False
         self.video_stream.set_state("PAUSED")
+
+    @pyro_connected
+    def is_playing(self):
+        """Checks if the video stream is currently playing."""
+        self.video_stream.is_playing()
+
+    @pyro_connected
+    def set_reload_true(self):
+        """Sets the reload flag to true for the video stream."""
+        self.video_stream.set_reload_true()
+
+    def start(self):
+        """Starts the video stream worker thread."""
+        self.thread.start()
+
+    def stop(self):
+        """Stops the video stream worker thread and the pipeline."""
+        self.stop_pipeline()
         self.thread.stop()

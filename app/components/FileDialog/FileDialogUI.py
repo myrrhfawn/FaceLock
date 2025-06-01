@@ -13,6 +13,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 
 class Ui_File(object):
     def setupUi(self, File):
+        """Setup the UI for the File dialog."""
         File.setObjectName("File")
         File.resize(578, 720)
         sizePolicy = QtWidgets.QSizePolicy(
@@ -249,6 +250,30 @@ class Ui_File(object):
             "}"
         )
         self.encryptButton.setObjectName("encryptButton")
+        self.chooseFileButton = QtWidgets.QPushButton(self.frame_3)
+        self.chooseFileButton.setGeometry(
+            QtCore.QRect(578 - 130, 10, 180, 40)
+        )  # 578 - width - margin
+        self.chooseFileButton.setMinimumSize(QtCore.QSize(100, 40))
+        self.chooseFileButton.setMaximumSize(QtCore.QSize(100, 40))
+
+        self.chooseFileButton.setStyleSheet(
+            """
+            QPushButton {
+                color: white;
+                background-color: rgba(0, 0, 0, 30);
+                border: none;
+                border-radius: 10px;
+                font-size: 16px;
+            }
+            QPushButton:hover {
+                background-color: rgba(0, 0, 0, 45);
+            }
+        """
+        )
+        self.chooseFileButton.setObjectName("chooseFileButton")
+        self.chooseFileButton.setText("Select")
+
         self.horizontalLayout.addWidget(self.encryptButton)
         self.verticalLayout_3.addLayout(self.horizontalLayout)
         self.verticalLayout.addWidget(
@@ -259,9 +284,10 @@ class Ui_File(object):
         QtCore.QMetaObject.connectSlotsByName(File)
 
     def retranslateUi(self, File):
+        """Set the text for the UI elements."""
         _translate = QtCore.QCoreApplication.translate
         File.setWindowTitle(_translate("FileProcessor", "FileProcessor"))
-        self.label_2.setText(_translate("File", "Вітаємо, "))
+        self.label_2.setText(_translate("File", "Hello, "))
         self.label_3.setText(_translate("File", "Filename:"))
         self.label_6.setText(_translate("File", "Last modification:"))
         self.label_7.setText(_translate("File", "Creation time:"))
@@ -270,3 +296,4 @@ class Ui_File(object):
         self.label_5.setText(_translate("File", "Size:"))
         self.decryptButton.setText(_translate("File", "Decrypt"))
         self.encryptButton.setText(_translate("File", "Encrypt"))
+        self.chooseFileButton.setText(_translate("File", "Select"))

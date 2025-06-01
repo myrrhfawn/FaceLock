@@ -1,11 +1,9 @@
-import socket
-import pickle
-
 import logging
+import pickle
+import socket
 import sys
-import time
 
-from app.constants import SERVER_HOST, SERVER_PORT
+from common.constants import SERVER_HOST, SERVER_PORT
 
 logger = logging.getLogger(__name__)
 
@@ -16,6 +14,7 @@ class FaceLockClient:
         self.client.connect((SERVER_HOST, SERVER_PORT))
 
     def send_message(self, message):
+        """Sends a message to the server and handles the response."""
         # Send action
         action = message.get_action()
         logger.info(f"Sending action to server: {action['type']}")
@@ -31,15 +30,14 @@ class FaceLockClient:
         return response
 
     def _send(self, data):
-        """ Sends data to the server. """
+        """Sends data to the server."""
         data = pickle.dumps(data)
         self.client.send(data)
         data = self.client.recv(8192)
-        print("Data received in send:", data)
-
         return pickle.loads(data)
 
     def get_data(self, response):
+        """Receives data from the server based on the response."""
         buffer_size = response["size"] if response.get("size") else 8192
         logger.info(f"Receiving data from server with buffer size: {buffer_size}")
         data = self.client.recv(buffer_size)
@@ -47,9 +45,8 @@ class FaceLockClient:
         if not data:
             logger.error("No data received from server.")
             return None
-        print("Data received from server:", data)
         data = pickle.loads(data)
-        data['status'] = response.get("status", 500)
+        data["status"] = response.get("status", 500)
         return data
 
     def __del__(self):
@@ -62,6 +59,7 @@ class Message:
         self.action_type = action_type
 
     def get_action(self):
+        """Returns the action details for the message."""
         return {
             "request": self.request_type,
             "type": self.action_type,
@@ -69,12 +67,15 @@ class Message:
         }
 
     def get_data(self):
+        """Returns the data to be sent with the message."""
         return self.__dict__()
 
 
 class RegisterUserMessage(Message):
-    def __init__(self, username: str, password: str, encode_data: list, public_key: bytes):
-        """ Initializes a message for registering a user. """
+    def __init__(
+        self, username: str, password: str, encode_data: list, public_key: bytes
+    ):
+        """Initializes a message for registering a user."""
         super().__init__("POST", "REGISTER_USER")
         self.username = username
         self.password = password
@@ -102,7 +103,7 @@ class GetEncodingsMessage(Message):
 
 class GetUserMessage(Message):
     def __init__(self, username: str):
-        """ Initializes a message for getting user data. """
+        """Initializes a message for getting user data."""
         super().__init__("GET", "GET_USER")
         self.username = username
 

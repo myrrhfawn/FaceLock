@@ -22,3 +22,20 @@ repos:
           - "@prettier/plugin-xml@3.2.2"
         types_or: [javascript, html, css, xml, yaml, markdown]
         args: [--print-width=120]
+  - repo: https://github.com/pycqa/isort
+    rev: 5.11.5
+    hooks:
+      - id: isort
+        args: [--settings-file=setup.cfg]
+  - repo: https://github.com/hadialqattan/pycln
+    rev: v2.5.0
+    hooks:
+      - id: pycln
+        args: [--config=setup.cfg]
+  - repo: https://github.com/PyCQA/flake8
+    rev: 4.0.1
+    hooks:
+      - id: flake8
+        args: [--config=setup.cfg]
+        exclude: .*test.*
+        additional_dependencies: [flake8-docstrings==1.6.0, flake8-print==4.0.0]

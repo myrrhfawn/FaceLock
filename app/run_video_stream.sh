@@ -1,1 +1,0 @@
-PYTHONPATH=$(pwd) python3 /data/my_projects/FaceLock/app/stream/video_pipeline.py

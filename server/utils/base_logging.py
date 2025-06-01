@@ -1,7 +1,7 @@
-import os
 import logging
-from typing import Optional
+import os
 from logging.handlers import RotatingFileHandler
+from typing import Optional
 
 LOG_PATH = "/data/FaceLock/logs/"
 os.makedirs(LOG_PATH, exist_ok=True)
@@ -12,6 +12,7 @@ def setup_logging(
     file_name: Optional[str] = "face_lock.log",
     logger: logging.Logger = None,
 ):
+    """ "Sets up logging for the application."""
     formatter = logging.Formatter(
         f"%(asctime)s - %(levelname)s - [%(name)s]: %(message)s"
     )

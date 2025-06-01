@@ -1,15 +1,16 @@
 #!/usr/bin/env python
-import Pyro4
 import gi
+import Pyro4
 
 gi.require_version("Gst", "1.0")
 
-from app.common.base_logging import setup_logging
-from gi.repository import Gst
 from logging import getLogger
-from app.constants import SHOW_DETECTION, PYRO_SERIALIZER
-from app.detector.simple_facerec import SimpleFaceRec
-from app.stream.gstreamer_pipiline import GStreamerPipeline
+
+from common.base_logging import setup_logging
+from common.constants import PYRO_SERIALIZER, SHOW_DETECTION
+from detector.simple_facerec import SimpleFaceRec
+from gi.repository import Gst
+from stream.gstreamer_pipiline import GStreamerPipeline
 
 setup_logging(file_name="video_pipeline.log")
 logger = getLogger(__name__)
@@ -75,6 +76,12 @@ class FaceDetectionPipeline(GStreamerPipeline):
         else:
             logger.error(f"Unknown state: {state}. Use PLAYING, PAUSED or NULL.")
             return False
+
+    def is_playing(self):
+        """
+        Returns True if pipeline is in PLAYING state.
+        """
+        return self.player.get_state(0)[1] == Gst.State.PLAYING
 
 
 if __name__ == "__main__":
