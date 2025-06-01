@@ -1,7 +1,10 @@
 server/docker/postgres-data
-venv/*
 logs/*
 *.db
 /app/dist/
 /app/build/
 /app/keys/
+
+# Ignore Python cache files
+__pycache__/
+*.pyc
