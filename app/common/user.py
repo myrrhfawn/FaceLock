@@ -31,7 +31,7 @@ class User:
 
         :return: The path to the private key file.
         """
-        keys_folder = os.path.join(os.getcwd(), KEY_STORAGE_PATH)
+        keys_folder = os.path.join(KEY_STORAGE_PATH)
         if not os.path.exists(keys_folder):
             os.makedirs(keys_folder)
         return os.path.join(

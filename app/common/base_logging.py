@@ -3,7 +3,7 @@ import os
 from logging.handlers import RotatingFileHandler
 from typing import Optional
 
-LOG_PATH = "/data/FaceLock/logs/"
+LOG_PATH = "/data/logs/"
 os.makedirs(LOG_PATH, exist_ok=True)
 import sys
 

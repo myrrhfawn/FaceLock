@@ -14,8 +14,6 @@ from components.video_stream.VideoStreamWorker import VideoStreamWorker
 from detector.simple_facerec import get_encodings
 from PyQt5 import QtCore, QtGui, QtWidgets
 
-from app.detector.simple_facerec import get_encodings
-
 setup_logging(file_name="app.log")
 logger = getLogger(__name__)
 

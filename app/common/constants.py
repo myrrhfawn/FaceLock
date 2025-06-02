@@ -1,5 +1,7 @@
 from enum import Enum
 
+from common.tools import get_app_path
+
 #  pyinstaller --onefile --windowed app/main.py
 # color scheme
 # #00062b
@@ -75,7 +77,8 @@ else:
     INPUT_SOURCE = "web"
     INPUT_DEVICE = "/dev/video0"
 
+APP_PATH = get_app_path()
 MAX_FPS = 60
 
 # RsaCryptoProvider
-KEY_STORAGE_PATH = "keys"
+KEY_STORAGE_PATH = "/data/keys"

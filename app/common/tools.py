@@ -1,4 +1,16 @@
 import os
+import sys
+
+
+def get_app_path():
+    """
+    Returns the absolute path to the application directory.
+    """
+    if getattr(sys, "frozen", False):
+        # PyInstaller-режим
+        return sys._MEIPASS if hasattr(sys, "_MEIPASS") else os.getcwd()
+    else:
+        return os.getcwd()
 
 
 def replace_file_extension(file_path: str, new_extension: str) -> str:

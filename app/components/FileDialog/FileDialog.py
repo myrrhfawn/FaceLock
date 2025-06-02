@@ -6,7 +6,7 @@ from logging import getLogger
 import cv2
 import numpy as np
 from common.client import FaceLockClient, GetUserMessage
-from common.constants import DEBUG, Extensions
+from common.constants import APP_PATH, DEBUG, Extensions
 from common.tools import replace_file_extension
 from common.user import User
 from components.FileDialog.FileDialogUI import Ui_File
@@ -54,7 +54,7 @@ class FileDialog(QtWidgets.QDialog):
         self.ui.encryptButton.clicked.connect(self.encrypt_button_click)
         self.ui.chooseFileButton.clicked.connect(self.choose_another_file)
         self.mainWindow = mainWindow
-        self.base_path = os.getcwd()
+        self.base_path = APP_PATH
         self.ui.label_2.setText(self.ui.label_2.text() + user_name)
         self.client = FaceLockClient()
         self.user = self.init_user(user_name)
@@ -69,7 +69,10 @@ class FileDialog(QtWidgets.QDialog):
         file_path = None
         while not file_path:
             file_path, _ = QFileDialog.getOpenFileName(
-                None, "Chose file", os.getcwd(), "All Files (*);;FaceLock Files (*.fl)"
+                None,
+                "Chose file",
+                "~/",
+                "All Files (*);;FaceLock Files (*.fl)",
             )
             if not file_path:
                 QMessageBox.critical(None, "Error", "File not selected.")

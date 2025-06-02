@@ -7,7 +7,7 @@ import cv2
 import dlib
 import numpy as np
 from common.client import FaceLockClient, GetEncodingsMessage
-from common.constants import UNKNOWN_TITLE
+from common.constants import APP_PATH, UNKNOWN_TITLE
 from common.frame import Frame
 
 logger = getLogger(__name__)
@@ -18,7 +18,7 @@ face_detector = dlib.get_frontal_face_detector()
 
 def get_absolute_path(relative_path):
     """Get the absolute path for a given relative path."""
-    return os.path.abspath(os.path.join(os.getcwd(), relative_path))
+    return os.path.abspath(os.path.join(APP_PATH, relative_path))
 
 
 shape_predictor = dlib.shape_predictor(
