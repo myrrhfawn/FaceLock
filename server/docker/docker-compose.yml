@@ -10,6 +10,8 @@ services:
       - "9001"
     ports:
       - "9001:9001"
+    volumes:
+      - /data/my_projects/FaceLock/server:/app/
     restart: "always"
     depends_on:
       - db

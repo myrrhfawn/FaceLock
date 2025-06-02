@@ -18,6 +18,7 @@ class FaceLockClient:
         # Send action
         action = message.get_action()
         logger.info(f"Sending action to server: {action['type']}")
+        logger.info(f"Sending data: {action}")
         response = self._send(action)
         if action["size"] > 38:
             # If size is greater than 38, we expect data to follow

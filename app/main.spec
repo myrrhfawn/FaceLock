@@ -1,9 +1,13 @@
 # -*- mode: python ; coding: utf-8 -*-
 
+import os, sys
+
+project_root = os.path.abspath(os.path.dirname(sys.argv[0]))
+app_path = os.path.join(project_root, 'app')
 
 a = Analysis(
     ['main.py'],
-    pathex=[],
+    pathex=[project_root],
     binaries=[],
     datas=[],
     hiddenimports=[],

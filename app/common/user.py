@@ -1,7 +1,9 @@
+import logging
 import os
 
 from common.constants import KEY_STORAGE_PATH
-from onnxruntime.transformers.shape_infer_helper import logger
+
+logger = logging.getLogger(__name__)
 
 
 class User:

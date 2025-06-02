@@ -1,14 +1,5 @@
 import os
 
-import face_recognition
-
-
-def prepare_image(image, encoding=False):
-    """Prepares an image for face recognition."""
-    if encoding:
-        image = face_recognition.face_encodings(image)
-    return image
-
 
 def replace_file_extension(file_path: str, new_extension: str) -> str:
     """

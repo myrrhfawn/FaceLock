@@ -41,6 +41,7 @@ class RegisterDialog(QtWidgets.QDialog):
             encode_data=self.encoding,
             public_key=public_key,
         )
+        print(f"Registering user with username: {self.encoding}")
         response = client.send_message(message)
         user_data = client.get_data(response)
 

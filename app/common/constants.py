@@ -8,7 +8,7 @@ from enum import Enum
 # #0062d0
 
 MIN_DETECTION_FPS = 0
-DEBUG = False
+DEBUG = True
 
 # MainWindow
 REGISTER_BUTTON_TIMEOUT = 3

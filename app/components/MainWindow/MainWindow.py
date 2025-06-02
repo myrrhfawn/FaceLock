@@ -7,12 +7,14 @@ import cv2
 from common.base_logging import setup_logging
 from common.constants import UNKNOWN_TITLE
 from common.frame import Frame
-from common.tools import prepare_image
 from components.FileDialog.FileDialog import FileDialog
 from components.MainWindow.MainWindowUI import Ui_MainWindow
 from components.RegisterDialog.RegisterDialog import RegisterDialog
 from components.video_stream.VideoStreamWorker import VideoStreamWorker
+from detector.simple_facerec import get_encodings
 from PyQt5 import QtCore, QtGui, QtWidgets
+
+from app.detector.simple_facerec import get_encodings
 
 setup_logging(file_name="app.log")
 logger = getLogger(__name__)
@@ -95,7 +97,7 @@ class FaceLockApp(QtWidgets.QMainWindow):
         frame = Frame()
         while frame.detection != UNKNOWN_TITLE:
             frame = self.stream.get_frame()
-        encoding = prepare_image(frame.img, encoding=True)
+        encoding, _ = get_encodings(frame.img)
         if len(encoding) > 0:
             encoding = encoding[0]
         if len(encoding) == 0:
